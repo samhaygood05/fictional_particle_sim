@@ -14,8 +14,10 @@ public class Main {
 
     public static void main(String[] args) {
 
+        // Initializes Particle System
         particleSystem.particles = new Particle[] {
-               new Particle((new Point(SCALE_WIDTH/2, SCALE_HEIGHT/2)), new Vector(new Point(-10, 10)), 1, 0, false, false)
+                Particle.random(1, 1, true, false),
+                Particle.random(1, 1, true, false)
         };
         particleSystem.barriers = BORDER;
 

@@ -161,6 +161,7 @@ public class Particle {
         this.fixedVel = fixedVel;
     }
 
+    // Calculations for Individual Particles
     public Vector force(Particle b) {
 
         double dist = this.pos.dist(b.pos);
@@ -219,7 +220,6 @@ public class Particle {
         } else return 0;
 
     }
-
     public void inside(Barrier b) {
         double dLeft = this.pos.disp(b.left).center().end.x;
         double dRight = this.pos.disp(b.right).center().end.x;
@@ -248,7 +248,6 @@ public class Particle {
             }
         }
     }
-
     public void chargeColor() {
         if (charge == 0) {
             color = new Color(128, 128, 128);
@@ -263,15 +262,6 @@ public class Particle {
         }
         if(mass < 0) {
             color = new Color(255 - color.getRed(), 255 - color.getGreen(), 255 - color.getBlue());
-        }
-    }
-
-    public void remove() {
-
-        if (this.pos.dist(CENTER) >= MAX_DISTANCE) {
-            fixedCharge = true;
-            fixedVel = true;
-            vel = new Vector();
         }
     }
 
