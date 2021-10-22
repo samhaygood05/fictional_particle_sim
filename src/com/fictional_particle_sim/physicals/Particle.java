@@ -169,7 +169,7 @@ public class Particle {
         if (dist != 0) {
 
             Vector direct = new Vector(this.pos, b.pos).norm();
-            double distCube = 2 * Math.pow(Math.PI, 2) * Math.pow(dist, 3);
+            double distCube = TWO_PI_SQUARED * Math.pow(dist, 3);
             if (dist > 2 * MIN_DIST) {
                 double forceM = this.charge * b.charge / distCube;
                 return direct.scalar(forceM);
@@ -207,7 +207,7 @@ public class Particle {
             double dist = this.pos.dist(b.pos);
 
             if (dist != 0) {
-                return CHARGE_FORCE * b.charge / (2 * Math.pow(Math.PI, 2) * Math.pow(dist, 3));
+                return CHARGE_FORCE * b.charge / (TWO_PI_SQUARED * Math.pow(dist, 3));
             } else return b.charge / Math.abs(b.charge);
         } else return 0;
     }
@@ -216,7 +216,7 @@ public class Particle {
         if (!this.equals(b)) {
             double dist = this.pos.dist(b.pos);
             if (dist != 0) {
-                return SPF * DELTA_CHARGE_FORCE * b.charge / (4 * Math.pow(Math.PI, 2) * Math.pow(dist, 2));
+                return DELTA_CHARGE_FORCE * b.charge / (2 * TWO_PI_SQUARED * Math.pow(dist, 2));
             } else return b.charge / Math.abs(b.charge);
         } else return 0;
 

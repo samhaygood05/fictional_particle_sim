@@ -29,7 +29,9 @@ public class Main {
         while (true){
 
             //Compute Next Frame
-            System.out.println(particleSystem);
+            if (DEBUG){
+                System.out.println(particleSystem);
+            }
 
             particleSystem.simulate(false);
 

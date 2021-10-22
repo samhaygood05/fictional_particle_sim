@@ -6,6 +6,9 @@ import com.fictional_particle_sim.physicals.ParticleSystem;
 
 public class Constants {
 
+    // Math Constants
+    public static final double TWO_PI_SQUARED = 2 * Math.pow(Math.PI, 2);
+
     // Screen Constants
     public static final int WIDTH = 1200;
     public static final int HEIGHT = 1200 / 16 * 9;
@@ -22,11 +25,14 @@ public class Constants {
 
     // Interaction Constants
     public static final double CHARGE_FORCE = .5;
-    public static final double DELTA_CHARGE_FORCE = 1;
+    public static final double DELTA_CHARGE_FORCE = 1 * SPF;
     public static final double MIN_DIST = 0.3;
     public static final double PUSHBACK_FORCE = -0.01;
     public static final double MAX_VEL = 50;
     public static final double MAX_CHARGE = 1;
+
+    // Debug Constants
+    public static final boolean DEBUG = false;
 
     public static ParticleSystem particleSystem = new ParticleSystem();
 
