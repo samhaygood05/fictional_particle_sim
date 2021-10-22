@@ -1,10 +1,9 @@
-package com.vectors;
+package com.fictional_particle_sim;
 
-import com.vectors.geometrics.Point;
-import com.vectors.geometrics.Vector;
+import com.fictional_particle_sim.geometrics.Point;
+import com.fictional_particle_sim.geometrics.Vector;
 
 import java.awt.*;
-import static com.vectors.Constants.*;
 
 public class TheCanvas extends Canvas{
 
@@ -39,11 +38,11 @@ public class TheCanvas extends Canvas{
 
     }
 
-    public static void drawPoint(Graphics g, com.vectors.geometrics.Point p, int r, Color color) {
+    public static void drawPoint(Graphics g, com.fictional_particle_sim.geometrics.Point p, int r, Color color) {
         g.setColor(color);
         g.fillOval((int)Math.round(p.x)-r, (int)Math.round(p.y)-r, 2*r, 2*r);
     }
-    public static void drawPoints(Graphics g, com.vectors.geometrics.Point[] p, int r, Color color) {
+    public static void drawPoints(Graphics g, com.fictional_particle_sim.geometrics.Point[] p, int r, Color color) {
         for (Point point : p) {
             drawPoint(g, point, r, color);
         }

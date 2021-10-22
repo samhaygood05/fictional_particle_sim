@@ -1,4 +1,4 @@
-package com.vectors;
+package com.fictional_particle_sim;
 
 import javax.swing.*;
 import java.awt.*;

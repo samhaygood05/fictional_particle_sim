@@ -1,11 +1,11 @@
-package com.vectors.physicals;
+package com.fictional_particle_sim.physicals;
 
-import com.vectors.TheCanvas;
-import com.vectors.geometrics.*;
+import com.fictional_particle_sim.TheCanvas;
+import com.fictional_particle_sim.geometrics.*;
 
 import java.awt.*;
 
-import static com.vectors.Constants.*;
+import static com.fictional_particle_sim.Constants.*;
 
 public class ParticleSystem {
     public Particle[] particles;

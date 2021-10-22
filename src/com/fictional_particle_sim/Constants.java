@@ -1,11 +1,7 @@
-package com.vectors;
+package com.fictional_particle_sim;
 
-import com.vectors.geometrics.Point;
-import com.vectors.geometrics.Vector;
-import com.vectors.physicals.Particle;
-import com.vectors.physicals.ParticleSystem;
-
-import java.awt.*;
+import com.fictional_particle_sim.geometrics.Point;
+import com.fictional_particle_sim.physicals.ParticleSystem;
 
 public class Constants {
     public static final int WIDTH = 1200;

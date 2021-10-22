@@ -1,12 +1,12 @@
-package com.vectors;
+package com.fictional_particle_sim;
 
-import com.vectors.geometrics.Point;
-import com.vectors.geometrics.Vector;
-import com.vectors.physicals.Particle;
+import com.fictional_particle_sim.geometrics.Point;
+import com.fictional_particle_sim.geometrics.Vector;
+import com.fictional_particle_sim.physicals.Particle;
 
 import java.awt.*;
 
-import static com.vectors.Constants.*;
+import static com.fictional_particle_sim.Constants.*;
 
 
 public class Main {
