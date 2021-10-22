@@ -1,4 +1,4 @@
-package com.vectors.geometrics;
+package com.fictional_particle_sim.geometrics;
 
 import java.awt.*;
 

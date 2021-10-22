@@ -1,4 +1,4 @@
-package com.vectors;
+package com.fictional_particle_sim;
 
 import com.vectors.geometrics.Point;
 import com.vectors.geometrics.Vector;
