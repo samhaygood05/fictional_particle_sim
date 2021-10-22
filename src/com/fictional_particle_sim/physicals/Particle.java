@@ -161,6 +161,7 @@ public class Particle {
         this.fixedVel = fixedVel;
     }
 
+    // Calculations for Individual Particles
     public Vector force(Particle b) {
 
         double dist = this.pos.dist(b.pos);
@@ -219,7 +220,6 @@ public class Particle {
         } else return 0;
 
     }
-
     public void inside(Barrier b) {
         double dLeft = this.pos.disp(b.left).center().end.x;
         double dRight = this.pos.disp(b.right).center().end.x;

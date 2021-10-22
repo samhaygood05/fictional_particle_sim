@@ -21,6 +21,7 @@ public class Constants {
     public static final double MIN_DIST = 0.3;
     public static final double PUSHBACK_FORCE = -0.01;
     public static final double MAX_VEL = 50;
+    public static final double MAX_CHARGE = 1;
 
     public static ParticleSystem particleSystem = new ParticleSystem();
 

@@ -16,6 +16,8 @@ public class ParticleSystem {
             Vector force = new Vector();
             double maxCharge = 0;
             double charge = 0;
+
+            // Calculates All Particle Interactions
             for (Particle agent : particles) {
                 if (!particle.fixedVel) {
                     force = force.add(particle.force(agent));
@@ -27,9 +29,21 @@ public class ParticleSystem {
             }
             particle.applyAcc(particle.acc(force));
             particle.applyVel();
+            if (!particle.fixedCharge) {
+                if (Math.abs(charge) > MAX_CHARGE) charge = MAX_CHARGE * charge/Math.abs(charge);
+                if (Math.abs(maxCharge) > MAX_CHARGE) maxCharge = MAX_CHARGE * maxCharge/Math.abs(maxCharge);
+                particle.setMaxCharge(maxCharge);
+                if ((Math.abs(charge + particle.charge) < Math.abs(maxCharge) && (charge + particle.charge)/Math.abs(charge + particle.charge) == maxCharge/Math.abs(maxCharge)) || (charge + particle.charge)/Math.abs(charge + particle.charge) != maxCharge/Math.abs(maxCharge))
+                    particle.setCharge(charge + particle.charge);
+            }
+            particle.chargeColor();
+
+            //Calculates All Barrier Interactions
             for (Barrier barrier : barriers) {
                 particle.inside(barrier);
             }
+
+            //Loops the Particle to Other Side of Screen
             if (loop) {
                 if (particle.pos.x >= SCALE_WIDTH) {
                     particle.pos.x = particle.pos.x % SCALE_WIDTH;
@@ -42,14 +56,7 @@ public class ParticleSystem {
                     particle.pos.y = (particle.pos.y % SCALE_HEIGHT) + SCALE_HEIGHT;
                 }
             }
-            if (!particle.fixedCharge) {
-                if (Math.abs(charge) > 1) charge = charge/Math.abs(charge);
-                if (Math.abs(maxCharge) > 1) maxCharge = maxCharge/Math.abs(maxCharge);
-                particle.setMaxCharge(maxCharge);
-                if ((Math.abs(charge + particle.charge) < Math.abs(maxCharge) && (charge + particle.charge)/Math.abs(charge + particle.charge) == maxCharge/Math.abs(maxCharge)) || (charge + particle.charge)/Math.abs(charge + particle.charge) != maxCharge/Math.abs(maxCharge))
-                    particle.setCharge(charge + particle.charge);
-            }
-            particle.chargeColor();
+
         }
     }
     public void draw(Graphics g, TheCanvas canvas, int r, boolean showVel) {
