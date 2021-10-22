@@ -114,6 +114,7 @@ public class Particle {
         this.fixedVel = fixedVel;
     }
 
+    //Generates a Particle with Random Position
     public static Particle random(double mass) {
         return new Particle(new Point(Math.random() * SCALE_WIDTH, Math.random() * SCALE_HEIGHT), mass, (Math.random() * 2) - 1);
     }
