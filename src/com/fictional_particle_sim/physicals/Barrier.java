@@ -7,13 +7,10 @@ import java.awt.*;
 
 public class Barrier {
 
-    public Vector line, perpLine1, perpLine2;
+    public Vector line;
 
 
     public Barrier(Vector v) {
         line = v;
-
-        perpLine1 = v.rotate(Math.PI/2);
-        perpLine2 = perpLine1.center(line.end);
     }
 }
