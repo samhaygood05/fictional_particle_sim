@@ -151,6 +151,16 @@ public class Vector {
         return  new Vector[]{x, y};
     }
 
+    public boolean between(Point a, Point b) {
+
+        return a.disp(this).opposite(b.disp(this));
+    }
+
+    public boolean opposite(Vector b) {
+
+        return this.norm().equals(b.norm().scalar(-1));
+    }
+
     @Override
     public String toString() {
         return center().end.toString();

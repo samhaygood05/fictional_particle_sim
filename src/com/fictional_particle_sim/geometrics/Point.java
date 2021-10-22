@@ -35,6 +35,13 @@ public class Point {
         return temp.perp(b);
     }
 
+    public boolean between(Vector a, Vector b) {
+        Vector[] dispA = disp(a).comp();
+        Vector[] dispB = disp(b).comp();
+
+        return dispA[0].opposite(dispB[0]) && dispA[1].opposite(dispB[1]);
+    }
+
     public boolean equals(Point b) {
 
         return this.x == b.x && this.y == b.y;
