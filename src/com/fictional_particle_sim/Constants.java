@@ -1,8 +1,11 @@
 package com.fictional_particle_sim;
 
 import com.fictional_particle_sim.geometrics.Point;
+import com.fictional_particle_sim.geometrics.Vector;
 import com.fictional_particle_sim.physicals.Barrier;
 import com.fictional_particle_sim.physicals.ParticleSystem;
+
+import java.awt.*;
 
 public class Constants {
 
@@ -28,7 +31,7 @@ public class Constants {
     public static final double DELTA_CHARGE_FORCE = 1 * SPF;
     public static final double MIN_DIST = 0.3;
     public static final double PUSHBACK_FORCE = -0.01;
-    public static final double MAX_VEL = 50;
+    public static final double MAX_VEL = 100;
     public static final double MAX_CHARGE = 1;
 
     // Debug Constants
@@ -37,10 +40,10 @@ public class Constants {
     public static ParticleSystem particleSystem = new ParticleSystem();
 
     public static final Barrier[] BORDER = new Barrier[] {
-            new Barrier(new Point(-10, -10), new Point(0, SCALE_HEIGHT + 10)),
-            new Barrier(new Point(-10,-10), new Point(SCALE_WIDTH + 10, 0)),
-            new Barrier(new Point(SCALE_WIDTH, -10), new Point(SCALE_WIDTH + 10, SCALE_HEIGHT +10)),
-            new Barrier(new Point(-10, SCALE_HEIGHT), new Point(SCALE_WIDTH +10, SCALE_HEIGHT + 10))
+            new Barrier(new Vector(new Point(0, 0), new Point(0, SCALE_HEIGHT))),
+            new Barrier(new Vector(new Point(0, 0), new Point(SCALE_WIDTH, 0))),
+            new Barrier(new Vector(new Point(SCALE_WIDTH, 0), new Point(SCALE_WIDTH, SCALE_HEIGHT))),
+            new Barrier(new Vector(new Point(0, SCALE_HEIGHT), new Point(SCALE_WIDTH, SCALE_HEIGHT)))
     };
 
 }

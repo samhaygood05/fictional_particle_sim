@@ -16,10 +16,13 @@ public class Main {
 
         // Initializes Particle System
         particleSystem.particles = new Particle[] {
-                Particle.random(1, 1, true, false),
-                Particle.random(1, 1, true, false)
+                new Particle(new Point(SCALE_WIDTH/2, SCALE_HEIGHT/2), new Vector(50,Math.PI))
         };
-        particleSystem.barriers = BORDER;
+        particleSystem.barriers = new Barrier[] {
+                new Barrier(new Vector(new Point(SCALE_WIDTH/2 - 1, SCALE_HEIGHT/2 - 2), new Point(SCALE_WIDTH/2 - 2, SCALE_HEIGHT/2 + 2))),
+                BORDER[0], BORDER[1], BORDER[2], BORDER[3]
+        };
+        particleSystem.barriers[0].line.color = Color.CYAN;
 
         VectorSpace fr = new VectorSpace(Constants.WIDTH, Constants.HEIGHT);
 
@@ -33,7 +36,7 @@ public class Main {
                 System.out.println(particleSystem);
             }
 
-            particleSystem.simulate(false);
+            particleSystem.simulate(true);
 
             g.clearRect(0, 0, Constants.WIDTH, Constants.HEIGHT);
 

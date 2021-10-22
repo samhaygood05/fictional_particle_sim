@@ -40,6 +40,17 @@ public class TheCanvas extends Canvas{
         }
 
     }
+    public static void drawBarriers(Graphics g, Barrier[] v) {
+        for (Barrier barrier : v) {
+            g.setColor(barrier.line.color);
+            g.drawLine((int)Math.round(barrier.line.start.x * PPU), (int)Math.round(barrier.line.start.y * PPU), (int)Math.round(barrier.line.end.x * PPU),(int)Math.round(barrier.line.end.y * PPU));
+            if (Constants.DEBUG) {
+                g.drawLine((int)Math.round(barrier.perpLine1.start.x * PPU), (int)Math.round(barrier.perpLine1.start.y * PPU), (int)Math.round(barrier.perpLine1.end.x * PPU),(int)Math.round(barrier.perpLine1.end.y * PPU));
+                g.drawLine((int)Math.round(barrier.perpLine2.start.x * PPU), (int)Math.round(barrier.perpLine2.start.y * PPU), (int)Math.round(barrier.perpLine2.end.x * PPU),(int)Math.round(barrier.perpLine2.end.y * PPU));
+            }
+        }
+
+    }
 
     public static void drawPoint(Graphics g, com.fictional_particle_sim.geometrics.Point p, int r, Color color) {
         g.setColor(color);
@@ -49,11 +60,6 @@ public class TheCanvas extends Canvas{
         for (Point point : p) {
             drawPoint(g, point, r, color);
         }
-    }
-
-    public static void drawBarrier(Graphics g, Barrier b) {
-        g.setColor(b.color);
-        g.fillRect((int)(b.corn1.x * PPU), (int)(b.corn1.y * PPU), (int)((b.corn2.x - b.corn1.x) * PPU), (int)((b.corn2.y - b.corn1.y) * PPU));
     }
 
 }

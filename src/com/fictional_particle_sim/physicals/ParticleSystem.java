@@ -40,7 +40,7 @@ public class ParticleSystem {
 
             //Calculates All Barrier Interactions
             for (Barrier barrier : barriers) {
-                particle.inside(barrier);
+                particle.collide(barrier);
             }
 
             //Loops the Particle to Other Side of Screen
@@ -61,9 +61,8 @@ public class ParticleSystem {
     }
     public void draw(Graphics g, TheCanvas canvas, int r, boolean showVel) {
         if (barriers.length > 0) {
-            for(Barrier barrier: barriers) {
-                TheCanvas.drawBarrier(g, barrier);
-            }
+
+            TheCanvas.drawBarriers(g, barriers);
         }
         if (particles.length > 0){
             for (Particle particle : particles) {

@@ -221,32 +221,10 @@ public class Particle {
         } else return 0;
 
     }
-    public void inside(Barrier b) {
-        double dLeft = this.pos.disp(b.left).center().end.x;
-        double dRight = this.pos.disp(b.right).center().end.x;
-        double dUp = this.pos.disp(b.up).center().end.y;
-        double dDown = this.pos.disp(b.down).center().end.y;
-
-        if (dLeft * dRight < 0 && dUp * dDown < 0) {
-
-            boolean wasLeft = this.lastPos.disp(b.left).center().end.x < 0;
-            boolean wasRight = this.lastPos.disp(b.right).center().end.x > 0;
-            boolean wasUp = this.lastPos.disp(b.up).center().end.y < 0;
-            boolean wasDown = this.lastPos.disp(b.down).center().end.y > 0;
-
-            if (wasRight) {
-                pos.x = pos.x - dRight;
-                vel = new Vector(new Point(-vel.center().end.x, vel.center().end.y)).center(vel.start);
-            } else if (wasLeft) {
-                pos.x = pos.x - dLeft;
-                vel = new Vector(new Point(-vel.center().end.x, vel.center().end.y)).center(vel.start);
-            } else if (wasDown) {
-                pos.y = pos.y - dDown;
-                vel = new Vector(new Point(vel.center().end.x, -vel.center().end.y)).center(vel.start);
-            } else if (wasUp) {
-                pos.y = pos.y - dUp;
-                vel = new Vector(new Point(vel.center().end.x, -vel.center().end.y)).center(vel.start);
-            }
+    public void collide(Barrier b) {
+        if (b.line.between(this.pos, this.lastPos)) {
+            pos = pos.sub(pos.disp(b.line).center().end.mult(1.001));
+            vel = vel.sub(vel.perp(b.line).scalar(2));
         }
     }
     public void chargeColor() {
