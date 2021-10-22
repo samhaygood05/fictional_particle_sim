@@ -114,8 +114,23 @@ public class Particle {
         this.fixedVel = fixedVel;
     }
 
-    public static Particle random( double mass) {
+    public static Particle random(double mass) {
         return new Particle(new Point(Math.random() * SCALE_WIDTH, Math.random() * SCALE_HEIGHT), mass, (Math.random() * 2) - 1);
+    }
+    public static Particle random(Vector vel, double mass) {
+        return new Particle(new Point(Math.random() * SCALE_WIDTH, Math.random() * SCALE_HEIGHT), vel, mass, (Math.random() * 2) - 1);
+    }
+    public static Particle random(double mass, double charge) {
+        return new Particle(new Point(Math.random() * SCALE_WIDTH, Math.random() * SCALE_HEIGHT), mass, charge);
+    }
+    public static Particle random(Vector vel, double mass, double charge) {
+        return new Particle(new Point(Math.random() * SCALE_WIDTH, Math.random() * SCALE_HEIGHT), vel, mass, charge);
+    }
+    public static Particle random(double mass, double charge, boolean fixedCharge, boolean fixedVel) {
+        return new Particle(new Point(Math.random() * SCALE_WIDTH, Math.random() * SCALE_HEIGHT), mass, charge, fixedCharge, fixedVel);
+    }
+    public static Particle random(Vector vel, double mass, double charge, boolean fixedCharge, boolean fixedVel) {
+        return new Particle(new Point(Math.random() * SCALE_WIDTH, Math.random() * SCALE_HEIGHT), vel, mass, charge, fixedCharge, fixedVel);
     }
 
     public void setColor(Color color) {
