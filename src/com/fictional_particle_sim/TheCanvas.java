@@ -2,8 +2,11 @@ package com.fictional_particle_sim;
 
 import com.fictional_particle_sim.geometrics.Point;
 import com.fictional_particle_sim.geometrics.Vector;
+import com.fictional_particle_sim.physicals.Barrier;
 
 import java.awt.*;
+
+import static com.fictional_particle_sim.Constants.PPU;
 
 public class TheCanvas extends Canvas{
 
@@ -46,6 +49,11 @@ public class TheCanvas extends Canvas{
         for (Point point : p) {
             drawPoint(g, point, r, color);
         }
+    }
+
+    public static void drawBarrier(Graphics g, Barrier b) {
+        g.setColor(b.color);
+        g.fillRect((int)(b.corn1.x * PPU), (int)(b.corn1.y * PPU), (int)((b.corn2.x - b.corn1.x) * PPU), (int)((b.corn2.y - b.corn1.y) * PPU));
     }
 
 }

@@ -30,6 +30,10 @@ public class Point {
 
         return Math.hypot(b.x-this.x, b.y-this.y);
     }
+    public Vector disp(Vector b) {
+        Vector temp = new Vector(b.start, this);
+        return temp.perp(b);
+    }
 
     public boolean equals(Point b) {
 

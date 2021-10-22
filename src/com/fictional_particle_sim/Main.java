@@ -2,6 +2,7 @@ package com.fictional_particle_sim;
 
 import com.fictional_particle_sim.geometrics.Point;
 import com.fictional_particle_sim.geometrics.Vector;
+import com.fictional_particle_sim.physicals.Barrier;
 import com.fictional_particle_sim.physicals.Particle;
 
 import java.awt.*;
@@ -14,43 +15,10 @@ public class Main {
     public static void main(String[] args) {
 
         particleSystem.particles = new Particle[] {
-//                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0,false, false),
-//                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-//                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-//                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-//                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-//                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-//                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-//                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-//                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-//                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-//                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-//                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-//                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-//                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 1, true, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, -1, true, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(Math.random()*SCALE_WIDTH, Math.random()*SCALE_HEIGHT)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(0.5 + SCALE_WIDTH/2, SCALE_HEIGHT/2)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(SCALE_WIDTH/2 - 0.5, SCALE_HEIGHT/2)), new Vector(new Point(0, 0)), 1, 0, false, false),
-                new Particle((new Point(SCALE_WIDTH/2 - 0.25, SCALE_HEIGHT/2)), new Vector(new Point(-1, 0)), 1, 0, false, false)
+               new Particle((new Point(SCALE_WIDTH/2, SCALE_HEIGHT/2)), new Vector(new Point(-10, 10)), 1, 0, false, false)
         };
+        particleSystem.barriers = BORDER;
+
         VectorSpace fr = new VectorSpace(Constants.WIDTH, Constants.HEIGHT);
 
     }
@@ -61,7 +29,7 @@ public class Main {
             //Compute Next Frame
             System.out.println(particleSystem);
 
-            particleSystem.simulate(true);
+            particleSystem.simulate(false);
 
             g.clearRect(0, 0, Constants.WIDTH, Constants.HEIGHT);
 

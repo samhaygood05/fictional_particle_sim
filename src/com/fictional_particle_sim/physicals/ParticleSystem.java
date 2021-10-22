@@ -9,6 +9,7 @@ import static com.fictional_particle_sim.Constants.*;
 
 public class ParticleSystem {
     public Particle[] particles;
+    public Barrier[] barriers;
 
     public void simulate(boolean loop) {
         for (Particle particle : particles) {
@@ -26,6 +27,9 @@ public class ParticleSystem {
             }
             particle.applyAcc(particle.acc(force));
             particle.applyVel();
+            for (Barrier barrier : barriers) {
+                particle.inside(barrier);
+            }
             if (loop) {
                 if (particle.pos.x >= SCALE_WIDTH) {
                     particle.pos.x = particle.pos.x % SCALE_WIDTH;
@@ -49,11 +53,18 @@ public class ParticleSystem {
         }
     }
     public void draw(Graphics g, TheCanvas canvas, int r, boolean showVel) {
-        for (Particle particle : particles) {
-            TheCanvas.drawPoint(g, particle.pos.mult(PPU), r, particle.color);
-            TheCanvas.drawPoint(g, particle.pos.mult(PPU), (int)(MIN_DIST*PPU/2), new Color(particle.color.getRed(), particle.color.getGreen(), particle.color.getBlue(), 100));
-            if (showVel) {
-                TheCanvas.drawVector(g, particle.vel.scaleFromOrigin(100. / PPU).center(particle.pos.mult(PPU)), true, .1, .05, particle.color);
+        if (barriers.length > 0) {
+            for(Barrier barrier: barriers) {
+                TheCanvas.drawBarrier(g, barrier);
+            }
+        }
+        if (particles.length > 0){
+            for (Particle particle : particles) {
+                TheCanvas.drawPoint(g, particle.pos.mult(PPU), r, particle.color);
+                TheCanvas.drawPoint(g, particle.pos.mult(PPU), (int) (MIN_DIST * PPU / 2), new Color(particle.color.getRed(), particle.color.getGreen(), particle.color.getBlue(), 100));
+                if (showVel) {
+                    TheCanvas.drawVector(g, particle.vel.scaleFromOrigin(100. / PPU).center(particle.pos.mult(PPU)), true, .1, .05, particle.color);
+                }
             }
         }
     }

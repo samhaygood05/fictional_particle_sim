@@ -10,7 +10,7 @@ import static com.fictional_particle_sim.Constants.*;
 
 public class Particle {
 
-    public Point pos;
+    public Point pos, lastPos;
     public Vector vel;
     public double mass, charge, maxCharge;
     public boolean fixedCharge, fixedVel;
@@ -18,6 +18,7 @@ public class Particle {
     public Color color;
 
     public Particle(Point pos) {
+        this.lastPos = pos;
         this.pos = pos;
         this.vel = new Vector();
 
@@ -29,6 +30,7 @@ public class Particle {
         this.fixedVel = false;
     }
     public Particle(Point pos, Vector vel) {
+        this.lastPos = pos;
         this.pos = pos;
         this.vel = vel.center(pos);
 
@@ -40,6 +42,7 @@ public class Particle {
         this.fixedVel = false;
     }
     public Particle(Point pos, double mass, double charge) {
+        this.lastPos = pos;
         this.pos = pos;
         this.vel = new Vector();
 
@@ -51,6 +54,7 @@ public class Particle {
         this.fixedVel = false;
     }
     public Particle(Point pos, Vector vel, double mass, double charge) {
+        this.lastPos = pos;
         this.pos = pos;
         this.vel = vel.center(pos);
 
@@ -62,6 +66,7 @@ public class Particle {
         this.fixedVel = false;
     }
     public Particle(Point pos, boolean fixedCharge, boolean fixedVel) {
+        this.lastPos = pos;
         this.pos = pos;
         this.vel = new Vector();
 
@@ -73,6 +78,7 @@ public class Particle {
         this.fixedVel = fixedVel;
     }
     public Particle(Point pos, Vector vel, boolean fixedCharge, boolean fixedVel) {
+        this.lastPos = pos;
         this.pos = pos;
         this.vel = vel.center(pos);
 
@@ -84,6 +90,7 @@ public class Particle {
         this.fixedVel = fixedVel;
     }
     public Particle(Point pos, double mass, double charge, boolean fixedCharge, boolean fixedVel) {
+        this.lastPos = pos;
         this.pos = pos;
         this.vel = new Vector();
 
@@ -95,6 +102,7 @@ public class Particle {
         this.fixedVel = fixedVel;
     }
     public Particle(Point pos, Vector vel, double mass, double charge, boolean fixedCharge, boolean fixedVel) {
+        this.lastPos = pos;
         this.pos = pos;
         this.vel = vel.center(pos);
 
@@ -104,6 +112,10 @@ public class Particle {
 
         this.fixedCharge = fixedCharge;
         this.fixedVel = fixedVel;
+    }
+
+    public static Particle random( double mass) {
+        return new Particle(new Point(Math.random() * SCALE_WIDTH, Math.random() * SCALE_HEIGHT), mass, (Math.random() * 2) - 1);
     }
 
     public void setColor(Color color) {
@@ -140,16 +152,17 @@ public class Particle {
         if (dist != 0) {
 
             Vector direct = new Vector(this.pos, b.pos).norm();
+            double distCube = 2 * Math.pow(Math.PI, 2) * Math.pow(dist, 3);
             if (dist > 2 * MIN_DIST) {
-                double forceM = this.charge * b.charge / (2 * Math.pow(Math.PI, 2) * Math.pow(dist, 3));
+                double forceM = this.charge * b.charge / distCube;
                 return direct.scalar(forceM);
             } else if (dist > MIN_DIST) {
-                double forceM = (this.charge * b.charge/2 - PUSHBACK_FORCE * this.vel.proj(direct).sub(b.vel.proj(direct)).magnitude()) / (2 * Math.pow(Math.PI, 2) * Math.pow(dist, 3));
+                double forceM = (this.charge * b.charge/2 - PUSHBACK_FORCE * this.vel.proj(direct).sub(b.vel.proj(direct)).magnitude()) / distCube;
                 return direct.scalar(forceM);
             } else if (dist == MIN_DIST) {
                 return new Vector();
             } else {
-                double forceM = PUSHBACK_FORCE * this.vel.proj(direct).sub(b.vel.proj(direct)).magnitude() / (2 * Math.pow(Math.PI, 2) * Math.pow(dist, 3));
+                double forceM = PUSHBACK_FORCE * this.vel.proj(direct).sub(b.vel.proj(direct)).magnitude() / distCube;
                 return direct.scalar(forceM);
             }
 
@@ -168,6 +181,7 @@ public class Particle {
     }
     public void applyVel() {
 
+        lastPos = pos;
         pos = pos.add(vel.center().scalar(SPF).end);
     }
     public double maxCharge(Particle b) {
@@ -189,6 +203,35 @@ public class Particle {
             } else return b.charge / Math.abs(b.charge);
         } else return 0;
 
+    }
+
+    public void inside(Barrier b) {
+        double dLeft = this.pos.disp(b.left).center().end.x;
+        double dRight = this.pos.disp(b.right).center().end.x;
+        double dUp = this.pos.disp(b.up).center().end.y;
+        double dDown = this.pos.disp(b.down).center().end.y;
+
+        if (dLeft * dRight < 0 && dUp * dDown < 0) {
+
+            boolean wasLeft = this.lastPos.disp(b.left).center().end.x < 0;
+            boolean wasRight = this.lastPos.disp(b.right).center().end.x > 0;
+            boolean wasUp = this.lastPos.disp(b.up).center().end.y < 0;
+            boolean wasDown = this.lastPos.disp(b.down).center().end.y > 0;
+
+            if (wasRight) {
+                pos.x = pos.x - dRight;
+                vel = new Vector(new Point(-vel.center().end.x, vel.center().end.y)).center(vel.start);
+            } else if (wasLeft) {
+                pos.x = pos.x - dLeft;
+                vel = new Vector(new Point(-vel.center().end.x, vel.center().end.y)).center(vel.start);
+            } else if (wasDown) {
+                pos.y = pos.y - dDown;
+                vel = new Vector(new Point(vel.center().end.x, -vel.center().end.y)).center(vel.start);
+            } else if (wasUp) {
+                pos.y = pos.y - dUp;
+                vel = new Vector(new Point(vel.center().end.x, -vel.center().end.y)).center(vel.start);
+            }
+        }
     }
 
     public void chargeColor() {
@@ -234,6 +277,7 @@ public class Particle {
     public String toString() {
         return "Particle{" +
                 "pos = " + pos +
+                ", lastPos = " + lastPos +
                 ", vel = " + vel.center().end +
                 ", mass = " + mass +
                 ", charge = " + charge +

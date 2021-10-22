@@ -1,6 +1,7 @@
 package com.fictional_particle_sim;
 
 import com.fictional_particle_sim.geometrics.Point;
+import com.fictional_particle_sim.physicals.Barrier;
 import com.fictional_particle_sim.physicals.ParticleSystem;
 
 public class Constants {
@@ -22,5 +23,12 @@ public class Constants {
     public static final double MAX_VEL = 50;
 
     public static ParticleSystem particleSystem = new ParticleSystem();
+
+    public static final Barrier[] BORDER = new Barrier[] {
+            new Barrier(new Point(-10, -10), new Point(0, SCALE_HEIGHT + 10)),
+            new Barrier(new Point(-10,-10), new Point(SCALE_WIDTH + 10, 0)),
+            new Barrier(new Point(SCALE_WIDTH, -10), new Point(SCALE_WIDTH + 10, SCALE_HEIGHT +10)),
+            new Barrier(new Point(-10, SCALE_HEIGHT), new Point(SCALE_WIDTH +10, SCALE_HEIGHT + 10))
+    };
 
 }
