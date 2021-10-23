@@ -44,10 +44,6 @@ public class TheCanvas extends Canvas{
         for (Barrier barrier : v) {
             g.setColor(barrier.line.color);
             g.drawLine((int)Math.round(barrier.line.start.x * PPU), (int)Math.round(barrier.line.start.y * PPU), (int)Math.round(barrier.line.end.x * PPU),(int)Math.round(barrier.line.end.y * PPU));
-            if (Constants.DEBUG) {
-                g.drawLine((int)Math.round(barrier.perpLine1.start.x * PPU), (int)Math.round(barrier.perpLine1.start.y * PPU), (int)Math.round(barrier.perpLine1.end.x * PPU),(int)Math.round(barrier.perpLine1.end.y * PPU));
-                g.drawLine((int)Math.round(barrier.perpLine2.start.x * PPU), (int)Math.round(barrier.perpLine2.start.y * PPU), (int)Math.round(barrier.perpLine2.end.x * PPU),(int)Math.round(barrier.perpLine2.end.y * PPU));
-            }
         }
 
     }

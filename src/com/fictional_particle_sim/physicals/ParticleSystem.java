@@ -2,6 +2,7 @@ package com.fictional_particle_sim.physicals;
 
 import com.fictional_particle_sim.TheCanvas;
 import com.fictional_particle_sim.geometrics.*;
+import com.fictional_particle_sim.geometrics.Point;
 
 import java.awt.*;
 
@@ -11,7 +12,7 @@ public class ParticleSystem {
     public Particle[] particles;
     public Barrier[] barriers;
 
-    public void simulate(boolean loop) {
+    public void simulate(String edgeBehavior) {
         for (Particle particle : particles) {
             Vector force = new Vector();
             double maxCharge = 0;
@@ -44,16 +45,26 @@ public class ParticleSystem {
             }
 
             //Loops the Particle to Other Side of Screen
-            if (loop) {
-                if (particle.pos.x >= SCALE_WIDTH) {
-                    particle.pos.x = particle.pos.x % SCALE_WIDTH;
-                } else if (particle.pos.x < 0) {
-                    particle.pos.x = (particle.pos.x % SCALE_WIDTH) + SCALE_WIDTH;
+            switch (edgeBehavior) {
+                case "LOOP" : {
+                    if (particle.pos.x >= SCALE_WIDTH) {
+                        particle.pos.x = particle.pos.x % SCALE_WIDTH;
+                    } else if (particle.pos.x < 0) {
+                        particle.pos.x = (particle.pos.x % SCALE_WIDTH) + SCALE_WIDTH;
+                    }
+                    if (particle.pos.y >= SCALE_HEIGHT) {
+                        particle.pos.y = particle.pos.y % SCALE_HEIGHT;
+                    } else if (particle.pos.y < 0) {
+                        particle.pos.y = (particle.pos.y % SCALE_HEIGHT) + SCALE_HEIGHT;
+                    }
                 }
-                if (particle.pos.y >= SCALE_HEIGHT) {
-                    particle.pos.y = particle.pos.y % SCALE_HEIGHT;
-                } else if (particle.pos.y < 0) {
-                    particle.pos.y = (particle.pos.y % SCALE_HEIGHT) + SCALE_HEIGHT;
+                case "BORDER" : {
+                    if (particle.pos.x >= SCALE_WIDTH || particle.pos.x < 0) {
+                        particle.vel = new Vector (new Point(-particle.vel.center().end.x, particle.vel.center().end.y));
+                    }
+                    if (particle.pos.y >= SCALE_HEIGHT || particle.pos.y < 0) {
+                        particle.vel = new Vector (new Point(particle.vel.center().end.x, -particle.vel.center().end.y));
+                    }
                 }
             }
 
