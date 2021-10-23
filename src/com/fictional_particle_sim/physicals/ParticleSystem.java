@@ -59,11 +59,20 @@ public class ParticleSystem {
                     }
                 }
                 case "BORDER" : {
-                    if (particle.pos.x >= SCALE_WIDTH || particle.pos.x < 0) {
+                    if (particle.pos.x >= SCALE_WIDTH) {
                         particle.vel = new Vector (new Point(-particle.vel.center().end.x, particle.vel.center().end.y));
+                        particle.pos = new Point(SCALE_WIDTH - 0.001, particle.pos.y);
+                    } else if (particle.pos.x < 0) {
+                        particle.vel = new Vector (new Point(-particle.vel.center().end.x, particle.vel.center().end.y));
+                        particle.pos = new Point(0.001, particle.pos.y);
                     }
-                    if (particle.pos.y >= SCALE_HEIGHT || particle.pos.y < 0) {
+                    if (particle.pos.y >= SCALE_HEIGHT) {
                         particle.vel = new Vector (new Point(particle.vel.center().end.x, -particle.vel.center().end.y));
+                        particle.pos = new Point(particle.pos.x, SCALE_HEIGHT - 0.001);
+                    } else if (particle.pos.y < 0) {
+                        particle.vel = new Vector (new Point(particle.vel.center().end.x, -particle.vel.center().end.y));
+                        particle.pos = new Point(particle.pos.x, 0.001);
+
                     }
                 }
             }

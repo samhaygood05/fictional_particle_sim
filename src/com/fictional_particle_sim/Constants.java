@@ -26,6 +26,9 @@ public class Constants {
     public static final double SCALE_HEIGHT = (double)HEIGHT/PPU;
     public static final Point SCALED_CENTER = new Point(SCALE_WIDTH/2, SCALE_HEIGHT/2);
 
+    public static final String LOOP = "LOOP";
+    public static final String BORDER = "BORDER";
+
     // Interaction Constants
     public static final double CHARGE_FORCE = .5;
     public static final double DELTA_CHARGE_FORCE = 1 * SPF;
@@ -38,12 +41,5 @@ public class Constants {
     public static final boolean DEBUG = false;
 
     public static ParticleSystem particleSystem = new ParticleSystem();
-
-    public static final Barrier[] BORDER = new Barrier[] {
-            new Barrier(new Vector(new Point(0, 0), new Point(0, SCALE_HEIGHT))),
-            new Barrier(new Vector(new Point(0, 0), new Point(SCALE_WIDTH, 0))),
-            new Barrier(new Vector(new Point(SCALE_WIDTH, 0), new Point(SCALE_WIDTH, SCALE_HEIGHT))),
-            new Barrier(new Vector(new Point(0, SCALE_HEIGHT), new Point(SCALE_WIDTH, SCALE_HEIGHT)))
-    };
 
 }
