@@ -35,7 +35,7 @@ public class Main {
                 System.out.println(particleSystem);
             }
 
-            particleSystem.simulate(BORDER);
+            particleSystem.simulate();
 
             g.clearRect(0, 0, Constants.WIDTH, Constants.HEIGHT);
 

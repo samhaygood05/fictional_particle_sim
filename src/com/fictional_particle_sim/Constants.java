@@ -25,9 +25,7 @@ public class Constants {
     public static final double SCALE_WIDTH = (double)WIDTH/PPU;
     public static final double SCALE_HEIGHT = (double)HEIGHT/PPU;
     public static final Point SCALED_CENTER = new Point(SCALE_WIDTH/2, SCALE_HEIGHT/2);
-
-    public static final String LOOP = "LOOP";
-    public static final String BORDER = "BORDER";
+    public static final String EDGE_BEHAVIOR = "BORDER"; // Can be BORDER or LOOP
 
     // Interaction Constants
     public static final double CHARGE_FORCE = .5;

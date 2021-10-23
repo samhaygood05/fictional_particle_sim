@@ -12,7 +12,7 @@ public class ParticleSystem {
     public Particle[] particles;
     public Barrier[] barriers;
 
-    public void simulate(String edgeBehavior) {
+    public void simulate() {
         for (Particle particle : particles) {
             Vector force = new Vector();
             double maxCharge = 0;
@@ -45,7 +45,7 @@ public class ParticleSystem {
             }
 
             //Loops the Particle to Other Side of Screen
-            switch (edgeBehavior) {
+            switch (EDGE_BEHAVIOR) {
                 case "LOOP" : {
                     if (particle.pos.x >= SCALE_WIDTH) {
                         particle.pos.x = particle.pos.x % SCALE_WIDTH;
