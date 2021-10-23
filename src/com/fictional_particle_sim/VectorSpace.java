@@ -11,7 +11,7 @@ public class VectorSpace extends JFrame {
     public VectorSpace() {
 
         setLayout(new BorderLayout());
-        setSize(1200, 1200/16 * 9);
+        setSize((int)(Constants.WIDTH), (int)(Constants.HEIGHT));
         setTitle("Vector Space");
         add("Center", canvas);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
