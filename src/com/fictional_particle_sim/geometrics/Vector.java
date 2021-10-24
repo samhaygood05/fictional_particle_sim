@@ -35,6 +35,11 @@ public class Vector {
         this.end = new Point(r * Math.cos(theta), r * Math.sin(theta));
     }
 
+    public BoundingBox boundingBox() {
+
+        return new BoundingBox(this);
+    }
+
     public void setColor(Color color) {
         this.color = color;
     }
@@ -159,7 +164,9 @@ public class Vector {
 
     public boolean between(Point a, Point b) {
         Vector ab = new Vector(a, b);
-        return linesIntersect(this, ab);
+        if (ab.boundingBox().intersect(boundingBox())) {
+            return linesIntersect(this, ab);
+        } else return false;
     }
 
     private static boolean linesIntersect(Vector v1, Vector v2) {

@@ -16,10 +16,10 @@ public class Main {
 
         // Initializes Particle System
         particleSystem.particles = new Particle[] {
-                new Particle(new Point(SCALE_WIDTH/2, SCALE_HEIGHT/2), new Vector(100,Math.PI))
+                new Particle(new Point(SCALE_WIDTH/2, SCALE_HEIGHT/2), new Vector(10,Math.PI))
         };
         particleSystem.barriers = new Barrier[] {
-                new Barrier(new Vector(new Point(SCALE_WIDTH/2 - 1, SCALE_HEIGHT/2 - 2), new Point(SCALE_WIDTH/2 - 2, SCALE_HEIGHT/2 + 2)))
+                new Barrier(new Vector(new Point(SCALE_WIDTH/2, SCALE_HEIGHT/2 - 0.1), new Point(SCALE_WIDTH/2 - 0.1, SCALE_HEIGHT/2 + 0.1)))
         };
         particleSystem.barriers[0].line.color = Color.CYAN;
 

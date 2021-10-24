@@ -35,6 +35,11 @@ public class Point {
         return temp.perp(b);
     }
 
+    public boolean inside(BoundingBox k) {
+
+        return this.x <= Math.max(k.a.x,k.b.x) && this.x >= Math.min(k.a.x,k.b.x) && this.y <= Math.max(k.a.y,k.b.y) && this.y >= Math.min(k.a.y,k.b.y);
+    }
+
     public boolean between(Vector a, Vector b) {
         Vector[] dispA = disp(a).comp();
         Vector[] dispB = disp(b).comp();
