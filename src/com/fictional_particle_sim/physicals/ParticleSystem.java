@@ -86,10 +86,10 @@ public class ParticleSystem {
         }
         if (particles.length > 0){
             for (Particle particle : particles) {
-                TheCanvas.drawPoint(g, particle.pos.mult(PPU), r, particle.color);
-                TheCanvas.drawPoint(g, particle.pos.mult(PPU), (int) (MIN_DIST * PPU / 2), new Color(particle.color.getRed(), particle.color.getGreen(), particle.color.getBlue(), 100));
+                TheCanvas.drawPoint(g, particle.pos.mult(PPU), (int) (MIN_DIST * PPU / 2), new Color(particle.chargeColor.getRed(), particle.chargeColor.getGreen(), particle.chargeColor.getBlue(), 130));
+                TheCanvas.drawPoint(g, particle.pos.mult(PPU), r, particle.maxChargeColor);
                 if (showVel) {
-                    TheCanvas.drawVector(g, particle.vel.scaleFromOrigin(100. / PPU).center(particle.pos.mult(PPU)), true, .1, .05, particle.color);
+                    TheCanvas.drawVector(g, particle.vel.scaleFromOrigin(100. / PPU).center(particle.pos.mult(PPU)), true, .1, .05, particle.chargeColor);
                 }
             }
         }

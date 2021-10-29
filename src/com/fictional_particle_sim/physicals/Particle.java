@@ -15,7 +15,7 @@ public class Particle {
     public double mass, charge, maxCharge;
     public boolean fixedCharge, fixedVel;
 
-    public Color color;
+    public Color chargeColor, maxChargeColor;
 
     public Particle(Point pos) {
         this.lastPos = pos;
@@ -134,8 +134,8 @@ public class Particle {
         return new Particle(new Point(Math.random() * SCALE_WIDTH, Math.random() * SCALE_HEIGHT), vel, mass, charge, fixedCharge, fixedVel);
     }
 
-    public void setColor(Color color) {
-        this.color = color;
+    public void setChargeColor(Color chargeColor) {
+        this.chargeColor = chargeColor;
     }
 
     public void setPos(Point pos) {
@@ -229,18 +229,33 @@ public class Particle {
     }
     public void chargeColor() {
         if (charge == 0) {
-            color = new Color(128, 128, 128);
+            chargeColor = new Color(128, 128, 128);
         } else if (charge >= 1) {
-            color = new Color(36, 162, 26);
+            chargeColor = new Color(36, 162, 26);
         } else if (charge <= -1) {
-            color = new Color(229, 43, 43);
+            chargeColor = new Color(229, 43, 43);
         } else if (charge > 0) {
-            color = new Color((int)(36*(charge) + 128*(1-charge)), (int)(162*(charge) + 128*(1-charge)), (int)(26*(charge) + 128*(1-charge)));
+            chargeColor = new Color((int)(36*(charge) + 128*(1-charge)), (int)(162*(charge) + 128*(1-charge)), (int)(26*(charge) + 128*(1-charge)));
         } else {
-            color = new Color((int)(229*(-charge) + 128*(1+charge)), (int)(43*(-charge) + 128*(1+charge)), (int)(43*(-charge) + 128*(1+charge)));
+            chargeColor = new Color((int)(229*(-charge) + 128*(1+charge)), (int)(43*(-charge) + 128*(1+charge)), (int)(43*(-charge) + 128*(1+charge)));
         }
         if(mass < 0) {
-            color = new Color(255 - color.getRed(), 255 - color.getGreen(), 255 - color.getBlue());
+            chargeColor = new Color(255 - chargeColor.getRed(), 255 - chargeColor.getGreen(), 255 - chargeColor.getBlue());
+        }
+
+        if (maxCharge == 0) {
+            maxChargeColor = new Color(128, 128, 128);
+        } else if (maxCharge >= 1) {
+            maxChargeColor = new Color(36, 162, 26);
+        } else if (maxCharge <= -1) {
+            maxChargeColor = new Color(229, 43, 43);
+        } else if (maxCharge > 0) {
+            maxChargeColor = new Color((int)(36*(maxCharge) + 128*(1-maxCharge)), (int)(162*(maxCharge) + 128*(1-maxCharge)), (int)(26*(maxCharge) + 128*(1-maxCharge)));
+        } else {
+            maxChargeColor = new Color((int)(229*(-maxCharge) + 128*(1+maxCharge)), (int)(43*(-maxCharge) + 128*(1+maxCharge)), (int)(43*(-maxCharge) + 128*(1+maxCharge)));
+        }
+        if(mass < 0) {
+            maxChargeColor = new Color(255 - maxChargeColor.getRed(), 255 - maxChargeColor.getGreen(), 255 - maxChargeColor.getBlue());
         }
     }
 
@@ -249,12 +264,12 @@ public class Particle {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Particle particle = (Particle) o;
-        return Double.compare(particle.mass, mass) == 0 && Double.compare(particle.charge, charge) == 0 && Double.compare(particle.maxCharge, maxCharge) == 0 && fixedCharge == particle.fixedCharge && fixedVel == particle.fixedVel && Objects.equals(pos, particle.pos) && Objects.equals(vel, particle.vel) && Objects.equals(color, particle.color);
+        return Double.compare(particle.mass, mass) == 0 && Double.compare(particle.charge, charge) == 0 && Double.compare(particle.maxCharge, maxCharge) == 0 && fixedCharge == particle.fixedCharge && fixedVel == particle.fixedVel && Objects.equals(pos, particle.pos) && Objects.equals(vel, particle.vel) && Objects.equals(chargeColor, particle.chargeColor);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pos, vel, mass, charge, maxCharge, fixedCharge, fixedVel, color);
+        return Objects.hash(pos, vel, mass, charge, maxCharge, fixedCharge, fixedVel, chargeColor);
     }
 
     @Override
