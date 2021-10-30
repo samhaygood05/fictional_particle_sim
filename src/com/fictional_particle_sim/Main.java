@@ -16,7 +16,7 @@ public class Main {
 
         // Initializes Particle System
         particleSystem.particles = new Particle[] {
-                new Particle(new Point(SCALE_WIDTH/2 + 1, SCALE_HEIGHT/2), 1.0, 1.0),
+                new Particle(new Point(SCALE_WIDTH/2, SCALE_HEIGHT/2), 1.0, 1.0),
                 Particle.random(1.0, -1.0),
                 Particle.random(1.0, 0.0),
                 Particle.random(1.0, 0.0),

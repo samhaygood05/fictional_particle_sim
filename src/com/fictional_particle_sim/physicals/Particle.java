@@ -233,7 +233,7 @@ public class Particle {
                     pos = pos.add(new Vector(b.center, pos).norm().center().scalar(b.radius * 1.001 - pos.dist(b.center)).end);
                     vel = vel.sub(vel.proj(new Vector(pos, b.center)).scalar(2));
                 } else if (this.pos.dist(b.center) > b.radius && this.lastPos.dist(b.center) <= b.radius) {
-                    pos = pos.sub(new Vector(pos, b.center).norm().center().scalar(b.radius - pos.dist(b.center)).end);
+                    pos = pos.sub(new Vector(pos, b.center).norm().center().scalar(b.radius * 0.999 - pos.dist(b.center)).end);
                     vel = vel.sub(vel.proj(new Vector(pos, b.center)).scalar(2));
                 }
             } case "RECTANGLE": {
