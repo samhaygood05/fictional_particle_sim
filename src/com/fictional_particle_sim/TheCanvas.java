@@ -42,8 +42,12 @@ public class TheCanvas extends Canvas{
     }
     public static void drawBarriers(Graphics g, Barrier[] v) {
         for (Barrier barrier : v) {
-            g.setColor(barrier.line.color);
-            g.drawLine((int)Math.round(barrier.line.start.x * PPU), (int)Math.round(barrier.line.start.y * PPU), (int)Math.round(barrier.line.end.x * PPU),(int)Math.round(barrier.line.end.y * PPU));
+            g.setColor(barrier.color);
+            switch (barrier.shape) {
+                case "LINE": g.drawLine((int) Math.round(barrier.line.start.x * PPU), (int) Math.round(barrier.line.start.y * PPU), (int) Math.round(barrier.line.end.x * PPU), (int) Math.round(barrier.line.end.y * PPU));
+                case "CIRCLE": g.drawOval((int)((barrier.center.x - barrier.radius) * PPU), (int)((barrier.center.y - barrier.radius) * PPU), (int)(2 * barrier.radius * PPU),(int)(2 * barrier.radius * PPU));
+                case "RECTANGLE": g.drawRect((int)(barrier.topLeft.x * PPU), (int)(barrier.topLeft.y * PPU), (int)((barrier.bottomRight.x - barrier.topLeft.x) * PPU), (int)((barrier.bottomRight.y - barrier.topLeft.y) * PPU));
+            }
         }
 
     }

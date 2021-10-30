@@ -24,8 +24,15 @@ public class ParticleSystem {
                     force = force.add(particle.force(agent));
                 }
                 if (!particle.fixedCharge) {
-                    maxCharge += particle.maxCharge(agent);
-                    charge += particle.charge(agent);
+                    if (!particle.fixedMaxCharge){
+                        maxCharge += particle.maxCharge(agent);
+                        charge += particle.charge(agent);
+                    } else {
+                        double deltaCharge = particle.charge(agent);
+                        if (Math.abs(deltaCharge)/deltaCharge == Math.abs(maxCharge)/maxCharge) {
+                            charge += deltaCharge;
+                        }
+                    }
                 }
             }
             particle.applyAcc(particle.acc(force));
@@ -79,7 +86,7 @@ public class ParticleSystem {
 
         }
     }
-    public void draw(Graphics g, TheCanvas canvas, int r, boolean showVel) {
+    public void draw(Graphics g, TheCanvas canvas, boolean showVel) {
         if (barriers.length > 0) {
 
             TheCanvas.drawBarriers(g, barriers);
@@ -87,7 +94,7 @@ public class ParticleSystem {
         if (particles.length > 0){
             for (Particle particle : particles) {
                 TheCanvas.drawPoint(g, particle.pos.mult(PPU), (int) (MIN_DIST * PPU / 2), new Color(particle.chargeColor.getRed(), particle.chargeColor.getGreen(), particle.chargeColor.getBlue(), 130));
-                TheCanvas.drawPoint(g, particle.pos.mult(PPU), r, particle.maxChargeColor);
+                TheCanvas.drawPoint(g, particle.pos.mult(PPU), (int) (MIN_DIST * PPU / 8), particle.maxChargeColor);
                 if (showVel) {
                     TheCanvas.drawVector(g, particle.vel.scaleFromOrigin(100. / PPU).center(particle.pos.mult(PPU)), true, .1, .05, particle.chargeColor);
                 }

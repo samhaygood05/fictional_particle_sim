@@ -17,8 +17,18 @@ public class BoundingBox {
     }
     public BoundingBox(Barrier v) {
 
-        a = new BoundingBox(v.line).a;
-        b = new BoundingBox(v.line).b;
+        switch (v.shape){
+            case "LINE": {
+                a = new BoundingBox(v.line).a;
+                b = new BoundingBox(v.line).b;
+            } case "CIRCLE": {
+                a = v.center.sub(new Point(v.radius, v.radius));
+                b = v.center.add(new Point(v.radius, v.radius));
+            } case "RECTANGLE": {
+                a = v.topLeft;
+                b = v.bottomRight;
+            }
+        }
     }
 
     public boolean intersect(BoundingBox b) {

@@ -16,13 +16,20 @@ public class Main {
 
         // Initializes Particle System
         particleSystem.particles = new Particle[] {
-                new Particle(new Point(SCALE_WIDTH/2, SCALE_HEIGHT/2), new Vector(10,Math.PI))
+                new Particle(new Point(SCALE_WIDTH/2 + 1, SCALE_HEIGHT/2), 1.0, 1.0),
+                Particle.random(1.0, -1.0),
+                Particle.random(1.0, 0.0),
+                Particle.random(1.0, 0.0),
+                Particle.random(1.0, 0.0),
+                Particle.random(1.0, 0.0),
+                Particle.random(1.0, 0.0),
+                Particle.random(1.0, 0.0),
+                Particle.random(1.0, 0.0)
         };
         particleSystem.barriers = new Barrier[] {
-                new Barrier(new Vector(new Point(SCALE_WIDTH/2, SCALE_HEIGHT/2 - 0.1), new Point(SCALE_WIDTH/2 - 0.1, SCALE_HEIGHT/2 + 0.1)))
+                new Barrier(new Point(SCALE_WIDTH/2, SCALE_HEIGHT/2), 1, Color.CYAN)
+                //, new Barrier(new Point(SCALE_WIDTH/2 - 1, SCALE_HEIGHT/2 - 1), new Point(SCALE_WIDTH/2 + 1, SCALE_HEIGHT/2 + 1), Color.CYAN)
         };
-        particleSystem.barriers[0].line.color = Color.CYAN;
-
         VectorSpace fr = new VectorSpace(Constants.WIDTH, Constants.HEIGHT);
 
     }
@@ -43,7 +50,7 @@ public class Main {
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, Constants.WIDTH, Constants.HEIGHT);
 
-            particleSystem.draw(g, canvas, 2, true);
+            particleSystem.draw(g, canvas, false);
 
             try {
                 Thread.sleep(1000 / Constants.FPS);

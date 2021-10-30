@@ -21,11 +21,11 @@ public class Constants {
     public static final int FPS = 1000;
     public static final double SPF = 0.0001;
     public static final double MAX_DISTANCE = 20000;
-    public static final int PPU = 100;
+    public static final int PPU = 200;
     public static final double SCALE_WIDTH = (double)WIDTH/PPU;
     public static final double SCALE_HEIGHT = (double)HEIGHT/PPU;
     public static final Point SCALED_CENTER = new Point(SCALE_WIDTH/2, SCALE_HEIGHT/2);
-    public static final String EDGE_BEHAVIOR = "LOOP"; // Can be BORDER or LOOP
+    public static final String EDGE_BEHAVIOR = "BORDER"; // Can be BORDER or LOOP
 
     // Interaction Constants
     public static final double CHARGE_FORCE = .5;

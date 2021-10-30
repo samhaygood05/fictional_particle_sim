@@ -13,7 +13,7 @@ public class Particle {
     public Point pos, lastPos;
     public Vector vel;
     public double mass, charge, maxCharge;
-    public boolean fixedCharge, fixedVel;
+    public boolean fixedCharge, fixedMaxCharge, fixedVel;
 
     public Color chargeColor, maxChargeColor;
 
@@ -65,7 +65,7 @@ public class Particle {
         this.fixedCharge = false;
         this.fixedVel = false;
     }
-    public Particle(Point pos, boolean fixedCharge, boolean fixedVel) {
+    public Particle(Point pos, boolean fixedCharge, boolean fixedMaxCharge, boolean fixedVel) {
         this.lastPos = pos;
         this.pos = pos;
         this.vel = new Vector();
@@ -77,7 +77,7 @@ public class Particle {
         this.fixedCharge = fixedCharge;
         this.fixedVel = fixedVel;
     }
-    public Particle(Point pos, Vector vel, boolean fixedCharge, boolean fixedVel) {
+    public Particle(Point pos, Vector vel, boolean fixedCharge, boolean fixedMaxCharge, boolean fixedVel) {
         this.lastPos = pos;
         this.pos = pos;
         this.vel = vel.center(pos);
@@ -89,7 +89,7 @@ public class Particle {
         this.fixedCharge = fixedCharge;
         this.fixedVel = fixedVel;
     }
-    public Particle(Point pos, double mass, double charge, boolean fixedCharge, boolean fixedVel) {
+    public Particle(Point pos, double mass, double charge, boolean fixedCharge, boolean fixedMaxCharge, boolean fixedVel) {
         this.lastPos = pos;
         this.pos = pos;
         this.vel = new Vector();
@@ -101,7 +101,7 @@ public class Particle {
         this.fixedCharge = fixedCharge;
         this.fixedVel = fixedVel;
     }
-    public Particle(Point pos, Vector vel, double mass, double charge, boolean fixedCharge, boolean fixedVel) {
+    public Particle(Point pos, Vector vel, double mass, double charge, boolean fixedCharge, boolean fixedMaxCharge, boolean fixedVel) {
         this.lastPos = pos;
         this.pos = pos;
         this.vel = vel.center(pos);
@@ -127,11 +127,11 @@ public class Particle {
     public static Particle random(Vector vel, double mass, double charge) {
         return new Particle(new Point(Math.random() * SCALE_WIDTH, Math.random() * SCALE_HEIGHT), vel, mass, charge);
     }
-    public static Particle random(double mass, double charge, boolean fixedCharge, boolean fixedVel) {
-        return new Particle(new Point(Math.random() * SCALE_WIDTH, Math.random() * SCALE_HEIGHT), mass, charge, fixedCharge, fixedVel);
+    public static Particle random(double mass, double charge, boolean fixedCharge, boolean fixedMaxCharge, boolean fixedVel) {
+        return new Particle(new Point(Math.random() * SCALE_WIDTH, Math.random() * SCALE_HEIGHT), mass, charge, fixedCharge, fixedMaxCharge, fixedVel);
     }
-    public static Particle random(Vector vel, double mass, double charge, boolean fixedCharge, boolean fixedVel) {
-        return new Particle(new Point(Math.random() * SCALE_WIDTH, Math.random() * SCALE_HEIGHT), vel, mass, charge, fixedCharge, fixedVel);
+    public static Particle random(Vector vel, double mass, double charge, boolean fixedCharge, boolean fixedMaxCharge, boolean fixedVel) {
+        return new Particle(new Point(Math.random() * SCALE_WIDTH, Math.random() * SCALE_HEIGHT), vel, mass, charge, fixedCharge, fixedMaxCharge, fixedVel);
     }
 
     public void setChargeColor(Color chargeColor) {
@@ -222,9 +222,51 @@ public class Particle {
 
     }
     public void collide(Barrier b) {
-        if (b.line.between(this.pos, this.lastPos)) {
-            pos = pos.sub(pos.disp(b.line).center().end.mult(1.001));
-            vel = vel.sub(vel.perp(b.line).scalar(2));
+        switch (b.shape) {
+            case "LINE": {
+                if (b.line.between(this.pos, this.lastPos)) {
+                    pos = pos.sub(pos.disp(b.line).center().end.mult(1.001));
+                    vel = vel.sub(vel.perp(b.line).scalar(2));
+                }
+            } case "CIRCLE": {
+                if (this.pos.dist(b.center) <= b.radius && this.lastPos.dist(b.center) > b.radius) {
+                    pos = pos.add(new Vector(b.center, pos).norm().center().scalar(b.radius * 1.001 - pos.dist(b.center)).end);
+                    vel = vel.sub(vel.proj(new Vector(pos, b.center)).scalar(2));
+                } else if (this.pos.dist(b.center) > b.radius && this.lastPos.dist(b.center) <= b.radius) {
+                    pos = pos.sub(new Vector(pos, b.center).norm().center().scalar(b.radius - pos.dist(b.center)).end);
+                    vel = vel.sub(vel.proj(new Vector(pos, b.center)).scalar(2));
+                }
+            } case "RECTANGLE": {
+                if (this.pos.inside(b.boundingBox()) && !this.lastPos.inside(b.boundingBox())) {
+                    if (lastPos.x < b.topLeft.x) {
+                        pos = new Point(b.topLeft.x - 0.0001, pos.y);
+                        vel = new Vector(new Point(-vel.center().end.x, vel.center().end.y)).shift(pos);
+                    } else if (lastPos.x > b.bottomRight.x) {
+                        pos = new Point(b.bottomRight.x + 0.0001, pos.y);
+                        vel = new Vector(new Point(-vel.center().end.x, vel.center().end.y)).shift(pos);
+                    } else if (lastPos.y < b.topLeft.y) {
+                        pos = new Point(pos.x, b.topLeft.y - 0.0001);
+                        vel = new Vector(new Point(vel.center().end.x,-vel.center().end.y)).shift(pos);
+                    } else if (lastPos.y > b.bottomRight.y) {
+                        pos = new Point(pos.x, b.bottomRight.y + 0.0001);
+                        vel = new Vector(new Point(vel.center().end.x,-vel.center().end.y)).shift(pos);
+                    }
+                } else if (!this.pos.inside(b.boundingBox()) && this.lastPos.inside(b.boundingBox())) {
+                    if (pos.x < b.topLeft.x) {
+                        pos = new Point(b.topLeft.x + 0.0001, pos.y);
+                        vel = new Vector(new Point(-vel.center().end.x, vel.center().end.y)).shift(pos);
+                    } else if (pos.x > b.bottomRight.x) {
+                        pos = new Point(b.bottomRight.x - 0.0001, pos.y);
+                        vel = new Vector(new Point(-vel.center().end.x, vel.center().end.y)).shift(pos);
+                    } else if (pos.y < b.topLeft.y) {
+                        pos = new Point(pos.x, b.topLeft.y + 0.0001);
+                        vel = new Vector(new Point(vel.center().end.x,-vel.center().end.y)).shift(pos);
+                    } else if (pos.y > b.bottomRight.y) {
+                        pos = new Point(pos.x, b.bottomRight.y - 0.0001);
+                        vel = new Vector(new Point(vel.center().end.x,-vel.center().end.y)).shift(pos);
+                    }
+                }
+            }
         }
     }
     public void chargeColor() {
@@ -243,20 +285,22 @@ public class Particle {
             chargeColor = new Color(255 - chargeColor.getRed(), 255 - chargeColor.getGreen(), 255 - chargeColor.getBlue());
         }
 
-        if (maxCharge == 0) {
-            maxChargeColor = new Color(128, 128, 128);
-        } else if (maxCharge >= 1) {
-            maxChargeColor = new Color(36, 162, 26);
-        } else if (maxCharge <= -1) {
-            maxChargeColor = new Color(229, 43, 43);
-        } else if (maxCharge > 0) {
-            maxChargeColor = new Color((int)(36*(maxCharge) + 128*(1-maxCharge)), (int)(162*(maxCharge) + 128*(1-maxCharge)), (int)(26*(maxCharge) + 128*(1-maxCharge)));
-        } else {
-            maxChargeColor = new Color((int)(229*(-maxCharge) + 128*(1+maxCharge)), (int)(43*(-maxCharge) + 128*(1+maxCharge)), (int)(43*(-maxCharge) + 128*(1+maxCharge)));
-        }
-        if(mass < 0) {
-            maxChargeColor = new Color(255 - maxChargeColor.getRed(), 255 - maxChargeColor.getGreen(), 255 - maxChargeColor.getBlue());
-        }
+        if (Math.abs(maxCharge) > Math.abs(charge)){
+            if (maxCharge == 0) {
+                maxChargeColor = new Color(128, 128, 128);
+            } else if (maxCharge >= 1) {
+                maxChargeColor = new Color(36, 162, 26);
+            } else if (maxCharge <= -1) {
+                maxChargeColor = new Color(229, 43, 43);
+            } else if (maxCharge > 0) {
+                maxChargeColor = new Color((int) (36 * (maxCharge) + 128 * (1 - maxCharge)), (int) (162 * (maxCharge) + 128 * (1 - maxCharge)), (int) (26 * (maxCharge) + 128 * (1 - maxCharge)));
+            } else {
+                maxChargeColor = new Color((int) (229 * (-maxCharge) + 128 * (1 + maxCharge)), (int) (43 * (-maxCharge) + 128 * (1 + maxCharge)), (int) (43 * (-maxCharge) + 128 * (1 + maxCharge)));
+            }
+            if (mass < 0) {
+                maxChargeColor = new Color(255 - maxChargeColor.getRed(), 255 - maxChargeColor.getGreen(), 255 - maxChargeColor.getBlue());
+            }
+        } else maxChargeColor = chargeColor;
     }
 
     @Override
