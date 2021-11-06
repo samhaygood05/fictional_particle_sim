@@ -115,6 +115,9 @@ public class Particle {
     }
 
     //Generates a Particle with Random Position
+    public static Particle random() {
+        return new Particle(new Point(Math.random() * SCALE_WIDTH, Math.random() * SCALE_HEIGHT), 1.0, (Math.random() * 2) - 1);
+    }
     public static Particle random(double mass) {
         return new Particle(new Point(Math.random() * SCALE_WIDTH, Math.random() * SCALE_HEIGHT), mass, (Math.random() * 2) - 1);
     }
@@ -196,9 +199,9 @@ public class Particle {
             vel = vel.norm().scalar(MAX_VEL);
         }
     }
-    public void applyVel() {
+    public void applyVel(boolean updateLastPos) {
 
-        lastPos = pos;
+        if (updateLastPos) lastPos = pos;
         pos = pos.add(vel.center().scalar(SPF).end);
     }
     public double maxCharge(Particle b) {
@@ -223,12 +226,12 @@ public class Particle {
     }
     public void collide(Barrier b) {
         switch (b.shape) {
-            case "LINE": {
+            case "LINE" -> {
                 if (b.line.between(this.pos, this.lastPos)) {
                     pos = pos.sub(pos.disp(b.line).center().end.mult(1.001));
                     vel = vel.sub(vel.perp(b.line).scalar(2));
                 }
-            } case "CIRCLE": {
+            } case "CIRCLE" -> {
                 if (this.pos.dist(b.center) <= b.radius && this.lastPos.dist(b.center) > b.radius) {
                     pos = pos.add(new Vector(b.center, pos).norm().center().scalar(b.radius * 1.001 - pos.dist(b.center)).end);
                     vel = vel.sub(vel.proj(new Vector(pos, b.center)).scalar(2));
@@ -236,7 +239,7 @@ public class Particle {
                     pos = pos.sub(new Vector(pos, b.center).norm().center().scalar(b.radius * 0.999 - pos.dist(b.center)).end);
                     vel = vel.sub(vel.proj(new Vector(pos, b.center)).scalar(2));
                 }
-            } case "RECTANGLE": {
+            } case "RECTANGLE" -> {
                 if (this.pos.inside(b.boundingBox()) && !this.lastPos.inside(b.boundingBox())) {
                     if (lastPos.x < b.topLeft.x) {
                         pos = new Point(b.topLeft.x - 0.0001, pos.y);
@@ -268,6 +271,13 @@ public class Particle {
                 }
             }
         }
+    }
+    public boolean collide(Field f) {
+        return switch (f.shape) {
+            case "RECTANGLE" -> pos.inside(f.boundingBox);
+            case "CIRCLE" -> pos.dist(f.center) <= f.radius;
+            default -> false;
+        };
     }
     public void chargeColor() {
         if (charge == 0) {

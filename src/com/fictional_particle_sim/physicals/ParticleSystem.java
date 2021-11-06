@@ -11,6 +11,7 @@ import static com.fictional_particle_sim.Constants.*;
 public class ParticleSystem {
     public Particle[] particles;
     public Barrier[] barriers;
+    public Field[] fields;
 
     public void simulate() {
         for (Particle particle : particles) {
@@ -36,7 +37,18 @@ public class ParticleSystem {
                 }
             }
             particle.applyAcc(particle.acc(force));
-            particle.applyVel();
+            particle.applyVel(true);
+            force = new Vector();
+            for (Field field : fields) {
+                if (particle.collide(field)) {
+                    force = force.add(field.force);
+                    if (!particle.fixedVel) particle.vel = particle.vel.scalar(field.velocityScalar);
+                    if (!particle.fixedCharge) particle.charge = particle.charge * field.chargeScalar;
+                }
+            }
+            particle.applyAcc(particle.acc(force));
+            particle.applyVel(false);
+
             if (!particle.fixedCharge) {
                 if (Math.abs(charge) > MAX_CHARGE) charge = MAX_CHARGE * charge/Math.abs(charge);
                 if (Math.abs(maxCharge) > MAX_CHARGE) maxCharge = MAX_CHARGE * maxCharge/Math.abs(maxCharge);
@@ -87,6 +99,10 @@ public class ParticleSystem {
         }
     }
     public void draw(Graphics g, TheCanvas canvas, boolean showVel) {
+        if (fields.length > 0) {
+
+            TheCanvas.drawFields(g, fields);
+        }
         if (barriers.length > 0) {
 
             TheCanvas.drawBarriers(g, barriers);

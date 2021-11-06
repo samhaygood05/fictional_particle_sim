@@ -3,6 +3,7 @@ package com.fictional_particle_sim;
 import com.fictional_particle_sim.geometrics.Point;
 import com.fictional_particle_sim.geometrics.Vector;
 import com.fictional_particle_sim.physicals.Barrier;
+import com.fictional_particle_sim.physicals.Field;
 
 import java.awt.*;
 
@@ -44,12 +45,20 @@ public class TheCanvas extends Canvas{
         for (Barrier barrier : v) {
             g.setColor(barrier.color);
             switch (barrier.shape) {
-                case "LINE": g.drawLine((int) Math.round(barrier.line.start.x * PPU), (int) Math.round(barrier.line.start.y * PPU), (int) Math.round(barrier.line.end.x * PPU), (int) Math.round(barrier.line.end.y * PPU));
-                case "CIRCLE": g.drawOval((int)((barrier.center.x - barrier.radius) * PPU), (int)((barrier.center.y - barrier.radius) * PPU), (int)(2 * barrier.radius * PPU),(int)(2 * barrier.radius * PPU));
-                case "RECTANGLE": g.drawRect((int)(barrier.topLeft.x * PPU), (int)(barrier.topLeft.y * PPU), (int)((barrier.bottomRight.x - barrier.topLeft.x) * PPU), (int)((barrier.bottomRight.y - barrier.topLeft.y) * PPU));
+                case "LINE" -> g.drawLine((int) Math.round(barrier.line.start.x * PPU), (int) Math.round(barrier.line.start.y * PPU), (int) Math.round(barrier.line.end.x * PPU), (int) Math.round(barrier.line.end.y * PPU));
+                case "CIRCLE"-> g.drawOval((int)((barrier.center.x - barrier.radius) * PPU), (int)((barrier.center.y - barrier.radius) * PPU), (int)(2 * barrier.radius * PPU),(int)(2 * barrier.radius * PPU));
+                case "RECTANGLE" -> g.drawRect((int)(barrier.topLeft.x * PPU), (int)(barrier.topLeft.y * PPU), (int)((barrier.bottomRight.x - barrier.topLeft.x) * PPU), (int)((barrier.bottomRight.y - barrier.topLeft.y) * PPU));
             }
         }
-
+    }
+    public static void drawFields(Graphics g, Field[] v) {
+        for (Field field : v) {
+            g.setColor(field.color);
+            switch (field.shape) {
+                case "CIRCLE" -> g.fillOval((int)((field.center.x - field.radius) * PPU), (int)((field.center.y - field.radius) * PPU), (int)(2 * field.radius * PPU),(int)(2 * field.radius * PPU));
+                case "RECTANGLE" -> g.fillRect((int)(field.topLeft.x * PPU), (int)(field.topLeft.y * PPU), (int)((field.bottomRight.x - field.topLeft.x) * PPU), (int)((field.bottomRight.y - field.topLeft.y) * PPU));
+            }
+        }
     }
 
     public static void drawPoint(Graphics g, com.fictional_particle_sim.geometrics.Point p, int r, Color color) {

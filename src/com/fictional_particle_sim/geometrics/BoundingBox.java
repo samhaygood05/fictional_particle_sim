@@ -1,6 +1,7 @@
 package com.fictional_particle_sim.geometrics;
 
 import com.fictional_particle_sim.physicals.Barrier;
+import com.fictional_particle_sim.physicals.Field;
 
 public class BoundingBox {
 
@@ -18,13 +19,25 @@ public class BoundingBox {
     public BoundingBox(Barrier v) {
 
         switch (v.shape){
-            case "LINE": {
+            case "LINE" -> {
                 a = new BoundingBox(v.line).a;
                 b = new BoundingBox(v.line).b;
-            } case "CIRCLE": {
+            } case "CIRCLE" -> {
                 a = v.center.sub(new Point(v.radius, v.radius));
                 b = v.center.add(new Point(v.radius, v.radius));
-            } case "RECTANGLE": {
+            } case "RECTANGLE" -> {
+                a = v.topLeft;
+                b = v.bottomRight;
+            }
+        }
+    }
+    public BoundingBox(Field v) {
+
+        switch (v.shape){
+            case "CIRCLE" -> {
+                a = v.center.sub(new Point(v.radius, v.radius));
+                b = v.center.add(new Point(v.radius, v.radius));
+            } case "RECTANGLE" -> {
                 a = v.topLeft;
                 b = v.bottomRight;
             }
