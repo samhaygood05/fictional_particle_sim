@@ -44,17 +44,20 @@ class TheCanvas : Canvas() {
         fun drawBarriers(g: Graphics, v: Array<Barrier>) {
             for (barrier in v) {
                 g.color = barrier.color
-                when (barrier.shape) {
-                    Shape.LINE -> {
-                        g.drawLine((barrier.line.start.x * Constants.PPU).roundToInt(), (barrier.line.start.y * Constants.PPU).roundToInt(), (barrier.line.end.x * Constants.PPU).roundToInt(), (barrier.line.end.y * Constants.PPU).roundToInt())
-                        g.drawOval(((barrier.center.x - barrier.radius) * Constants.PPU).toInt(), ((barrier.center.y - barrier.radius) * Constants.PPU).toInt(), (2 * barrier.radius * Constants.PPU).toInt(), (2 * barrier.radius * Constants.PPU).toInt())
-                        g.drawRect((barrier.topLeft.x * Constants.PPU).toInt(), (barrier.topLeft.y * Constants.PPU).toInt(), ((barrier.bottomRight.x - barrier.topLeft.x) * Constants.PPU).toInt(), ((barrier.bottomRight.y - barrier.topLeft.y) * Constants.PPU).toInt())
+
+                if (barrier.color.alpha != 0){
+                    when (barrier.shape) {
+                        Shape.LINE -> {
+                            g.drawLine((barrier.line.start.x * Constants.PPU).roundToInt(), (barrier.line.start.y * Constants.PPU).roundToInt(), (barrier.line.end.x * Constants.PPU).roundToInt(), (barrier.line.end.y * Constants.PPU).roundToInt())
+                            g.drawOval(((barrier.center.x - barrier.radius) * Constants.PPU).toInt(), ((barrier.center.y - barrier.radius) * Constants.PPU).toInt(), (2 * barrier.radius * Constants.PPU).toInt(), (2 * barrier.radius * Constants.PPU).toInt())
+                            g.drawRect((barrier.topLeft.x * Constants.PPU).toInt(), (barrier.topLeft.y * Constants.PPU).toInt(), ((barrier.bottomRight.x - barrier.topLeft.x) * Constants.PPU).toInt(), ((barrier.bottomRight.y - barrier.topLeft.y) * Constants.PPU).toInt())
+                        }
+                        Shape.CIRCLE -> {
+                            g.drawOval(((barrier.center.x - barrier.radius) * Constants.PPU).toInt(), ((barrier.center.y - barrier.radius) * Constants.PPU).toInt(), (2 * barrier.radius * Constants.PPU).toInt(), (2 * barrier.radius * Constants.PPU).toInt())
+                            g.drawRect((barrier.topLeft.x * Constants.PPU).toInt(), (barrier.topLeft.y * Constants.PPU).toInt(), ((barrier.bottomRight.x - barrier.topLeft.x) * Constants.PPU).toInt(), ((barrier.bottomRight.y - barrier.topLeft.y) * Constants.PPU).toInt())
+                        }
+                        Shape.RECTANGLE -> g.drawRect((barrier.topLeft.x * Constants.PPU).toInt(), (barrier.topLeft.y * Constants.PPU).toInt(), ((barrier.bottomRight.x - barrier.topLeft.x) * Constants.PPU).toInt(), ((barrier.bottomRight.y - barrier.topLeft.y) * Constants.PPU).toInt())
                     }
-                    Shape.CIRCLE -> {
-                        g.drawOval(((barrier.center.x - barrier.radius) * Constants.PPU).toInt(), ((barrier.center.y - barrier.radius) * Constants.PPU).toInt(), (2 * barrier.radius * Constants.PPU).toInt(), (2 * barrier.radius * Constants.PPU).toInt())
-                        g.drawRect((barrier.topLeft.x * Constants.PPU).toInt(), (barrier.topLeft.y * Constants.PPU).toInt(), ((barrier.bottomRight.x - barrier.topLeft.x) * Constants.PPU).toInt(), ((barrier.bottomRight.y - barrier.topLeft.y) * Constants.PPU).toInt())
-                    }
-                    Shape.RECTANGLE -> g.drawRect((barrier.topLeft.x * Constants.PPU).toInt(), (barrier.topLeft.y * Constants.PPU).toInt(), ((barrier.bottomRight.x - barrier.topLeft.x) * Constants.PPU).toInt(), ((barrier.bottomRight.y - barrier.topLeft.y) * Constants.PPU).toInt())
                 }
             }
         }

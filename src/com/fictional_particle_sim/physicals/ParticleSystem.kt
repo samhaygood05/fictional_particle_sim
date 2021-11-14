@@ -4,6 +4,7 @@ import com.fictional_particle_sim.util.Constants
 import com.fictional_particle_sim.util.EdgeBehavior.*
 import com.fictional_particle_sim.geometrics.Point
 import com.fictional_particle_sim.geometrics.Vector
+import com.fictional_particle_sim.util.Constants.Companion.SPF
 import com.fictional_particle_sim.util.TheCanvas
 import java.awt.Color
 import java.awt.Graphics
@@ -40,8 +41,8 @@ class ParticleSystem(var particles: Array<Particle> = arrayOf(), var barriers: A
                 if (particle.collide(field)) {
                     val fieldForce = field.fieldForce
                     force += particle.pos.fieldForce()
-                    if (!particle.fixedVel) particle.vel = particle.vel * field.velocityScalar
-                    if (!particle.fixedCharge) particle.charge = particle.charge * field.chargeScalar
+                    if (!particle.fixedVel) particle.vel = particle.vel * (((field.velocityScalar - 1) * SPF) + 1)
+                    if (!particle.fixedCharge) particle.charge = particle.charge * (((field.chargeScalar - 1) * SPF) + 1)
                 }
             }
             particle.applyAcc(particle.acc(force))

@@ -1,7 +1,6 @@
 package com.fictional_particle_sim.physicals
 
 import com.fictional_particle_sim.util.Constants
-import com.fictional_particle_sim.util.Constants.Companion.randomPos
 import com.fictional_particle_sim.geometrics.Point
 import com.fictional_particle_sim.geometrics.Vector
 import com.fictional_particle_sim.physicals.Shape.*
