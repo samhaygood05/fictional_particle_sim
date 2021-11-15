@@ -6,7 +6,6 @@ import com.fictional_particle_sim.physicals.Shape.*
 import com.fictional_particle_sim.physicals.Field
 import com.fictional_particle_sim.physicals.Particle
 import com.fictional_particle_sim.util.Constants
-import com.fictional_particle_sim.util.TheCanvas
 import com.fictional_particle_sim.util.VectorSpace
 import java.awt.Color
 import java.awt.Graphics
@@ -30,7 +29,7 @@ object Main {
         val fr = VectorSpace(Constants.WIDTH, Constants.HEIGHT)
     }
 
-    fun computeAndDraw(g: Graphics, canvas: TheCanvas?) {
+    fun computeAndDraw(g: Graphics) {
         while (true) {
 
             //Compute Next Frame
@@ -38,17 +37,12 @@ object Main {
                 println(Constants.particleSystem)
             }
             Constants.particleSystem.simulate()
-            g.clearRect(0, 0, Constants.WIDTH, Constants.HEIGHT)
 
             //Draw Frame
             g.color = Color.BLACK
             g.fillRect(0, 0, Constants.WIDTH, Constants.HEIGHT)
             Constants.particleSystem.draw(g, false)
-            try {
-                Thread.sleep((1000 / Constants.FPS).toLong())
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            }
+            Thread.sleep((1000 / Constants.FPS).toLong())
         }
     }
 }
