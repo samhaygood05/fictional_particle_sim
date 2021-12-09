@@ -2,11 +2,14 @@ package com.fictional_particle_sim.util
 
 import com.fictional_particle_sim.physicals.ParticleSystem
 import com.fictional_particle_sim.util.EdgeBehavior.*
+import com.fictional_particle_sim.util.Graphics.*
 import com.fictional_particle_sim.geometrics.Point
+import com.fictional_particle_sim.geometrics.Vector
 import kotlin.math.PI
 import kotlin.math.pow
 
 class Constants {
+
     companion object {
 
         // Math Constants
@@ -21,11 +24,14 @@ class Constants {
 
         // Simulation Constants
         const val FPS = 1000
-        const val SPF = 0.0001
+        const val SPF = 0.00001
         const val MAX_DISTANCE = 20000.0
         const val PPU = 200
         const val SCALE_WIDTH = WIDTH.toDouble() / PPU
         const val SCALE_HEIGHT = HEIGHT.toDouble() / PPU
+        @JvmField
+        val begin: Double = System.currentTimeMillis() / 1000.0
+
         @JvmField
         val SCALED_CENTER = Point(SCALE_WIDTH / 2, SCALE_HEIGHT / 2)
         @JvmField
@@ -38,10 +44,18 @@ class Constants {
         const val MIN_DIST = 0.3
         const val PUSHBACK_FORCE = -0.01
         const val MAX_VEL = 100.0
-        const val MAX_CHARGE = 1.0
+        const val MAX_CHARGE = 5.0
+
+        // Graphics Constants
+        @JvmField
+        val GRAPHICS = FAST
 
         // Debug Constants
         const val DEBUG = false
+        const val SHOW_PARTICLES = true
+        const val SHOW_BARRIERS = false
+        const val SHOW_FIELDS = false
+        const val SHOW_FPS = true
 
         @JvmField
         var particleSystem = ParticleSystem()
@@ -52,6 +66,13 @@ class Constants {
     }
 }
 
+typealias vectorField = Point.() -> Vector
+typealias scalarField = Point.() -> Double
+
 enum class EdgeBehavior {
     BORDER, LOOP, NOTHING
+}
+
+enum class Graphics {
+    FAST, FANCY
 }

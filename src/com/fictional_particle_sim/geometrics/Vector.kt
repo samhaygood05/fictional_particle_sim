@@ -23,8 +23,6 @@ class Vector(var start: Point = Point(), var end: Point = Point(), var color: Co
 
     operator fun times(that: Double) = Vector(end = center().end * that, color = color).center(start)
     operator fun times(that: Int) = this * that.toDouble()
-    operator fun Double.times(that: Vector) = that * this
-    operator fun Int.times(that: Vector) = that * this
 
     fun scaleFromOrigin(that: Double) = Vector(start * that, end * that, color)
 
@@ -117,8 +115,8 @@ class Vector(var start: Point = Point(), var end: Point = Point(), var color: Co
             val y3LessY1 = y3 - y1
             val collinearityTestForP3 = x1 * (y2 - y3) + x2 * y3LessY1 + x3 * (y1 - y2)
             if (collinearityTestForP3 == 0.0) {
-                if (x1 >= x3 && x1 <= x4 || x1 <= x3 && x1 >= x4 || x2 >= x3 && x2 <= x4 || x2 <= x3 && x2 >= x4 || x3 >= x1 && x3 <= x2 || x3 <= x1 && x3 >= x2) {
-                    return y1 >= y3 && y1 <= y4 || y1 <= y3 && y1 >= y4 || y2 >= y3 && y2 <= y4 || y2 <= y3 && y2 >= y4 || y3 >= y1 && y3 <= y2 || y3 <= y1 && y3 >= y2
+                if (x1 in x3..x4 || x1 in x4..x3 || x2 in x3..x4 || x2 in x4..x3 || x3 in x1..x2 || x3 in x2..x1) {
+                    return y1 in y3..y4 || y1 in y4..y3 || y2 in y3..y4 || y2 in y4..y3 || y3 in y1..y2 || y3 in y2..y1
                 }
             }
             return false
@@ -128,7 +126,7 @@ class Vector(var start: Point = Point(), var end: Point = Point(), var color: Co
 
     override fun toString(): String = center().end.toString()
     fun toString(inPolar: Boolean): String = if (inPolar) {
-            "( r = ${magnitude()} , theta = ${angle()} )"
+            "( r = ${round(magnitude() * 10000) / 10000} , theta = ${round(angle() * 18000/PI)/100}° )"
         } else toString()
 
 }
