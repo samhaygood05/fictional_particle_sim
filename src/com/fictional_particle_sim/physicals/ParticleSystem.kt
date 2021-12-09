@@ -2,16 +2,24 @@ package com.fictional_particle_sim.physicals
 
 import com.fictional_particle_sim.util.Constants
 import com.fictional_particle_sim.util.EdgeBehavior.*
+import com.fictional_particle_sim.util.Graphics.*
 import com.fictional_particle_sim.geometrics.Point
 import com.fictional_particle_sim.geometrics.Vector
+import com.fictional_particle_sim.util.Constants.Companion.GRAPHICS
+import com.fictional_particle_sim.util.Constants.Companion.MAX_CHARGE
+import com.fictional_particle_sim.util.Constants.Companion.SHOW_BARRIERS
+import com.fictional_particle_sim.util.Constants.Companion.SHOW_FIELDS
+import com.fictional_particle_sim.util.Constants.Companion.SHOW_PARTICLES
 import com.fictional_particle_sim.util.Constants.Companion.SPF
 import com.fictional_particle_sim.util.TheCanvas
 import java.awt.Color
 import java.awt.Graphics
 import kotlin.math.abs
+import kotlin.math.sign
 
-class ParticleSystem(var particles: Array<Particle> = arrayOf(), var barriers: Array<Barrier> = arrayOf(), var fields: Array<Field> = arrayOf()) {
+class ParticleSystem(var particles: Array<Particle> = arrayOf(), var barriers: Array<Barrier> = arrayOf(), var fields: Array<Field> = arrayOf(), var frame: Long = 0) {
     fun simulate() {
+        frame++
         for (particle in particles) {
             var force = Vector()
             var maxCharge = 0.0
@@ -40,19 +48,21 @@ class ParticleSystem(var particles: Array<Particle> = arrayOf(), var barriers: A
             for (field in fields) {
                 if (particle.collide(field)) {
                     val fieldForce = field.fieldForce
+                    val velocityScalar = field.velocityScalar
+                    val chargeScalar = field.chargeScalar
                     force += particle.pos.fieldForce()
-                    if (!particle.fixedVel) particle.vel = particle.vel * (((field.velocityScalar - 1) * SPF) + 1)
-                    if (!particle.fixedCharge) particle.charge = particle.charge * (((field.chargeScalar - 1) * SPF) + 1)
+                    if (!particle.fixedVel) particle.vel = particle.vel * (((particle.pos.velocityScalar() - 1) * SPF) + 1)
+                    if (!particle.fixedCharge) particle.charge = particle.charge * (((particle.pos.chargeScalar() - 1) * SPF) + 1)
                 }
             }
             particle.applyAcc(particle.acc(force))
             particle.applyVel(false)
 
             if (!particle.fixedCharge) {
-                if (abs(charge) > Constants.MAX_CHARGE) charge = Constants.MAX_CHARGE * charge / abs(charge)
-                if (abs(maxCharge) > Constants.MAX_CHARGE) maxCharge = Constants.MAX_CHARGE * maxCharge / abs(maxCharge)
+                if (abs(charge) > MAX_CHARGE) charge = MAX_CHARGE * sign(charge)
+                if (abs(maxCharge) > MAX_CHARGE) maxCharge = MAX_CHARGE * sign(maxCharge)
                 particle.maxCharge = maxCharge
-                if (abs(charge + particle.charge) < abs(maxCharge) && (charge + particle.charge) / abs(charge + particle.charge) == maxCharge / abs(maxCharge) || (charge + particle.charge) / abs(charge + particle.charge) != maxCharge / abs(maxCharge)) particle.charge = charge + particle.charge
+                if (abs(charge + particle.charge) < abs(maxCharge) && sign(charge + particle.charge) == sign(charge) || sign(charge + particle.charge) != sign(charge)) particle.charge = charge + particle.charge
             }
             particle.chargeColor()
 
@@ -75,17 +85,17 @@ class ParticleSystem(var particles: Array<Particle> = arrayOf(), var barriers: A
                 }
                 BORDER -> {
                     if (particle.pos.x >= Constants.SCALE_WIDTH) {
-                        particle.vel = Vector(Point(-particle.vel.center().end.x, particle.vel.center().end.y))
+                        particle.vel = Vector(Point(particle.vel.x(), -particle.vel.y()))
                         particle.pos = Point(Constants.SCALE_WIDTH - 0.001, particle.pos.y)
                     } else if (particle.pos.x < 0) {
-                        particle.vel = Vector(Point(-particle.vel.center().end.x, particle.vel.center().end.y))
+                        particle.vel = Vector(Point(particle.vel.x(), -particle.vel.y()))
                         particle.pos = Point(0.001, particle.pos.y)
                     }
                     if (particle.pos.y >= Constants.SCALE_HEIGHT) {
-                        particle.vel = Vector(Point(particle.vel.center().end.x, -particle.vel.center().end.y))
+                        particle.vel = Vector(Point(-particle.vel.x(), particle.vel.y()))
                         particle.pos = Point(particle.pos.x, Constants.SCALE_HEIGHT - 0.001)
                     } else if (particle.pos.y < 0) {
-                        particle.vel = Vector(Point(particle.vel.center().end.x, -particle.vel.center().end.y))
+                        particle.vel = Vector(Point(-particle.vel.x(), particle.vel.y()))
                         particle.pos = Point(particle.pos.x, 0.001)
                     }
                 }
@@ -102,13 +112,42 @@ class ParticleSystem(var particles: Array<Particle> = arrayOf(), var barriers: A
         }
         if (particles.isNotEmpty()) {
             for (particle in particles) {
-                TheCanvas.drawPoint(g, particle.pos * (Constants.PPU.toDouble()), (Constants.MIN_DIST * Constants.PPU / 2).toInt(), Color(particle.chargeColor.red, particle.chargeColor.green, particle.chargeColor.blue, 130))
+                TheCanvas.drawPoint(g, particle.pos * (Constants.PPU.toDouble()), (Constants.MIN_DIST * Constants.PPU / 2).toInt(), when (GRAPHICS){
+                    FAST -> Color(particle.chargeColor.red*130/255, particle.chargeColor.green*130/255, particle.chargeColor.blue*130/255)
+                    FANCY -> Color(particle.chargeColor.red, particle.chargeColor.green, particle.chargeColor.blue, 130)
+                })
+
+            }
+            for (particle in particles) {
                 TheCanvas.drawPoint(g, particle.pos * (Constants.PPU.toDouble()), (Constants.MIN_DIST * Constants.PPU / 8).toInt(), particle.maxChargeColor)
                 if (showVel) {
                     TheCanvas.drawVector(g, particle.vel.scaleFromOrigin(100.0 / Constants.PPU).center(particle.pos * (Constants.PPU.toDouble())), true, .1, .05, particle.chargeColor)
                 }
             }
         }
+    }
+
+    override fun toString(): String {
+        var temp = ""
+        if (SHOW_PARTICLES) {
+            temp += "Particles:\n"
+            for (particle in particles.indices) {
+                temp += "$particle: ${particles[particle]}\n"
+            }
+        }
+        if (SHOW_BARRIERS) {
+            temp += "\nBarriers:\n"
+            for (barrier in barriers.indices) {
+                temp += "$barrier: ${barriers[barrier]}\n"
+            }
+        }
+        if (SHOW_FIELDS) {
+            temp += "\nFields:\n"
+            for (field in fields.indices) {
+                temp += "$field: ${fields[field]}\n"
+            }
+        }
+        return temp
     }
 }
 

@@ -4,9 +4,11 @@ import com.fictional_particle_sim.util.Constants
 import com.fictional_particle_sim.geometrics.Point
 import com.fictional_particle_sim.geometrics.Vector
 import com.fictional_particle_sim.physicals.Shape.*
+import com.fictional_particle_sim.util.Constants.Companion.MAX_CHARGE
 import java.awt.Color
 import kotlin.math.abs
 import kotlin.math.pow
+import kotlin.math.round
 
 class Particle(var pos: Point, var lastPos: Point = pos,
                var vel: Vector = Vector(),
@@ -133,10 +135,10 @@ class Particle(var pos: Point, var lastPos: Point = pos,
     fun chargeColor() {
         chargeColor = when {
             charge == 0.0 -> Color(128, 128, 128)
-            charge >= 1 -> Color(36, 162, 26)
-            charge <= -1 -> Color(229, 43, 43)
-            charge > 0 -> Color((36 * charge + 128 * (1 - charge)).toInt(), (162 * charge + 128 * (1 - charge)).toInt(), (26 * charge + 128 * (1 - charge)).toInt())
-            else -> Color((229 * -charge + 128 * (1 + charge)).toInt(), (43 * -charge + 128 * (1 + charge)).toInt(), (43 * -charge + 128 * (1 + charge)).toInt())
+            charge >= MAX_CHARGE -> Color(36, 162, 26)
+            charge <= -MAX_CHARGE -> Color(229, 43, 43)
+            charge > 0 -> Color((36 * charge/MAX_CHARGE + 128 * (1 - charge/MAX_CHARGE)).toInt(), (162 * charge/MAX_CHARGE + 128 * (1 - charge/MAX_CHARGE)).toInt(), (26 * charge/MAX_CHARGE + 128 * (1 - charge/MAX_CHARGE)).toInt())
+            else -> Color((229 * -charge/MAX_CHARGE + 128 * (1 + charge/MAX_CHARGE)).toInt(), (43 * -charge/MAX_CHARGE + 128 * (1 + charge/MAX_CHARGE)).toInt(), (43 * -charge/MAX_CHARGE + 128 * (1 + charge/MAX_CHARGE)).toInt())
         }
         if (mass < 0) {
             chargeColor = Color(255 - chargeColor.red, 255 - chargeColor.green, 255 - chargeColor.blue)
@@ -154,6 +156,10 @@ class Particle(var pos: Point, var lastPos: Point = pos,
                 maxChargeColor = Color(255 - maxChargeColor.red, 255 - maxChargeColor.green, 255 - maxChargeColor.blue)
             }
         } else maxChargeColor = chargeColor
+    }
+
+    override fun toString(): String {
+        return "position: $pos, velocity: ${vel.toString(true)}, Mass:$mass, Charge: ${round(charge * 10000)/10000}, Max Charge: ${round(maxCharge * 10000)/10000}"
     }
 }
 

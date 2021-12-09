@@ -1,5 +1,7 @@
 package com.fictional_particle_sim.geometrics
 
+import kotlin.math.round
+
 fun Point(x: Int, y: Int): Point = Point(x.toDouble(), y.toDouble())
 class Point(var x: Double = 0.0, var y: Double = 0.0) {
 
@@ -15,8 +17,8 @@ class Point(var x: Double = 0.0, var y: Double = 0.0) {
     fun dist(that: Point = Point()) = Vector(this, that).magnitude()
     fun disp(that: Vector) = Vector(that.start, this).perp(that)
 
-    fun inside(k: BoundingBox): Boolean = x <= Math.max(k.a.x, k.b.x) && x >= Math.min(k.a.x, k.b.x) && y <= Math.max(k.a.y, k.b.y) && y >= Math.min(k.a.y, k.b.y)
+    fun inside(k: BoundingBox): Boolean = x <= k.a.x.coerceAtLeast(k.b.x) && x >= k.a.x.coerceAtMost(k.b.x) && y <= k.a.y.coerceAtLeast(k.b.y) && y >= k.a.y.coerceAtMost(k.b.y)
 
-    override fun toString(): String = "( $x , $y )"
+    override fun toString(): String = "( ${round(x * 10000) / 10000} , ${round(x * 10000) / 10000} )"
 
 }

@@ -29,7 +29,14 @@ class Barrier(var line: Vector = Vector(), var topLeft: Point = Point(), var bot
         return BoundingBox(a, b)
         }
 
+    override fun toString(): String {
+        return when (shape) {
+            LINE -> "$shape, ${line.start}, ${line.end}"
+            RECTANGLE -> "$shape, $topLeft, $bottomRight"
+            CIRCLE -> "$shape, $center, $radius"
+        }
     }
+}
 
 
 enum class Shape {
