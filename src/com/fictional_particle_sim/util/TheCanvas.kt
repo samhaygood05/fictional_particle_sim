@@ -89,5 +89,11 @@ class TheCanvas : Canvas() {
                 g.fillOval(p.x.roundToInt() - r, p.y.roundToInt() - r, 2 * r, 2 * r)
             }
         }
+        fun drawBoxAroundPoint(g: Graphics, p: Point, r: Int, color: Color) {
+            if (color.alpha != 0) {
+                g.color = color
+                g.fillRect(p.x.roundToInt() - r, p.y.roundToInt() - r, 2 * r, 2 * r)
+            }
+        }
     }
 }

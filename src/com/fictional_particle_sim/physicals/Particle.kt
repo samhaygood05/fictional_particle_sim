@@ -24,12 +24,12 @@ class Particle(var pos: Point, var lastPos: Point = pos,
         val dist = pos.dist(b.pos)
         val tempCharge = when (type){
             UNIVERSAL_ATTRACTOR -> when (b.type) {
-                UNIVERSAL_ATTRACTOR -> -abs(charge)
-                CHARGED, UNIVERSAL_REPELLER -> abs(charge)
+                UNIVERSAL_ATTRACTOR -> -10.0
+                CHARGED, UNIVERSAL_REPELLER -> 10.0
             }
             UNIVERSAL_REPELLER -> when (b.type) {
-                UNIVERSAL_ATTRACTOR -> abs(charge)
-                CHARGED, UNIVERSAL_REPELLER -> -abs(charge)
+                UNIVERSAL_ATTRACTOR -> 10.0
+                CHARGED, UNIVERSAL_REPELLER -> -10.0
             }
             CHARGED -> when (b.type) {
                 UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> 1.0
@@ -37,7 +37,7 @@ class Particle(var pos: Point, var lastPos: Point = pos,
             }
         }
         val tempChargeB = when (b.type) {
-            UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> abs(b.charge)
+            UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> 10.0
             CHARGED -> when (type) {
                 UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> 1.0
                 CHARGED -> b.charge
@@ -81,27 +81,19 @@ class Particle(var pos: Point, var lastPos: Point = pos,
         pos += (vel.center() * (Constants.SPF)).end
     }
     fun maxCharge(b: Particle): Double {
-        val tempMaxCharge = when (type) {
-            UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> MAX_ATTRACTOR_CHARGE
-            CHARGED -> MAX_CHARGE
-        }
         return if (this != b && (b.type != UNIVERSAL_ATTRACTOR || b.type != UNIVERSAL_ATTRACTOR)) {
             val dist = pos.dist(b.pos)
             if (dist != 0.0) {
                 Constants.CHARGE_FORCE * b.charge / (Constants.TWO_PI_SQUARED * dist.pow(3.0))
-            } else sign(b.charge) * tempMaxCharge
+            } else sign(b.charge) * MAX_CHARGE
         } else 0.0
     }
     fun charge(b: Particle): Double {
-        val tempMaxCharge = when (type) {
-            UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> MAX_ATTRACTOR_CHARGE
-            CHARGED -> MAX_CHARGE
-        }
         return if (this != b && (b.type != UNIVERSAL_ATTRACTOR || b.type != UNIVERSAL_ATTRACTOR)) {
             val dist = pos.dist(b.pos)
             if (dist != 0.0) {
                 Constants.DELTA_CHARGE_FORCE * b.charge / (2 * Constants.TWO_PI_SQUARED * dist.pow(2.0))
-            } else sign(b.charge) * tempMaxCharge
+            } else sign(b.charge) * MAX_CHARGE
         } else 0.0
     }
     fun collide(b: Barrier) {
@@ -174,7 +166,11 @@ class Particle(var pos: Point, var lastPos: Point = pos,
     }
 
     fun chargeColor() {
-        val gray = Color(128, 128, 128)
+        val gray = when (type) {
+            CHARGED -> Color(128, 128, 128)
+            UNIVERSAL_ATTRACTOR -> Color(252, 211, 3)
+            UNIVERSAL_REPELLER -> Color(3, 44, 252)
+        }
         val red = when (type) {
             CHARGED -> Color(36, 162, 26)
             UNIVERSAL_ATTRACTOR -> Color(252, 211, 3)

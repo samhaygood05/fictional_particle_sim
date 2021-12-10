@@ -11,6 +11,9 @@ import com.fictional_particle_sim.util.Constants.Companion.BARRIER_DEBUG
 import com.fictional_particle_sim.util.Constants.Companion.FIELD_DEBUG
 import com.fictional_particle_sim.util.Constants.Companion.HEIGHT
 import com.fictional_particle_sim.util.Constants.Companion.PARTICLE_DEBUG
+import com.fictional_particle_sim.util.Constants.Companion.PPU
+import com.fictional_particle_sim.util.Constants.Companion.SHOW_FPS
+import com.fictional_particle_sim.util.Constants.Companion.SHOW_TRAILS
 import com.fictional_particle_sim.util.Constants.Companion.SPF
 import com.fictional_particle_sim.util.Constants.Companion.WIDTH
 import com.fictional_particle_sim.util.TheCanvas
@@ -109,6 +112,14 @@ class ParticleSystem(var particles: Array<Particle> = arrayOf(), var barriers: A
         }
     }
     fun draw(g: Graphics, showVel: Boolean) {
+        if (!SHOW_TRAILS) {
+            g.color = Color.BLACK
+            g.fillRect(0, 0, WIDTH, HEIGHT)
+        }
+        if (SHOW_FPS){
+            g.color = Color.BLACK
+            g.fillRect(0, 0, 55, 15)
+        }
         if (fields.isNotEmpty()) {
             TheCanvas.drawFields(g, fields)
         }
@@ -117,23 +128,38 @@ class ParticleSystem(var particles: Array<Particle> = arrayOf(), var barriers: A
         }
         if (particles.isNotEmpty()) {
             for (particle in particles) {
-                TheCanvas.drawPoint(g, particle.pos * (Constants.PPU.toDouble()), (Constants.MIN_DIST * Constants.PPU / 2).toInt(), when (GRAPHICS){
+                TheCanvas.drawPoint(g, particle.pos * (PPU.toDouble()), (Constants.MIN_DIST * PPU / 2).toInt(), when (GRAPHICS){
                     FAST -> Color(particle.chargeColor.red*130/255, particle.chargeColor.green*130/255, particle.chargeColor.blue*130/255)
                     FANCY -> Color(particle.chargeColor.red, particle.chargeColor.green, particle.chargeColor.blue, 130)
                 })
 
             }
-            for (particle in particles) {
-                TheCanvas.drawPoint(g, particle.pos * (Constants.PPU.toDouble()), (Constants.MIN_DIST * abs(particle.mass).pow(1/4.0) * Constants.PPU / 8).toInt(), particle.targetChargeColor)
-                if (showVel) {
-                    TheCanvas.drawVector(g, particle.vel.scaleFromOrigin(100.0 / Constants.PPU).center(particle.pos * (Constants.PPU.toDouble())), true, .1, .05, particle.chargeColor)
+            if (PPU > 25){
+                for (particle in particles) {
+                    TheCanvas.drawPoint(
+                        g,
+                        particle.pos * (PPU.toDouble()),
+                        (Constants.MIN_DIST * abs(particle.mass).pow(1 / 4.0) * PPU / 8).toInt(),
+                        particle.targetChargeColor
+                    )
+                    if (showVel) {
+                        TheCanvas.drawVector(
+                            g,
+                            particle.vel.scaleFromOrigin(100.0 / PPU)
+                                .center(particle.pos * (PPU.toDouble())),
+                            true,
+                            .1,
+                            .05,
+                            particle.chargeColor
+                        )
+                    }
                 }
             }
         }
-        if (Constants.SHOW_FPS) {
+        if (SHOW_FPS) {
             val elapsedTime: Double = System.currentTimeMillis() / 1000.0 - Constants.begin
             if (frame / elapsedTime <= 20) g.color = Color.RED else g.color = Color.WHITE
-            g.drawString("FPS: ${(frame / elapsedTime).roundToInt()}", 5, 10)
+            g.drawString("FPS: ${(frame / elapsedTime).roundToInt()}", 2, 13)
         }
     }
 

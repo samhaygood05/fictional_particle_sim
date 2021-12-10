@@ -19,32 +19,7 @@ object Main {
     fun main(args: Array<String>) {
 
         // Initializes Particle System
-        particleSystem.particles = arrayOf(
-                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
-                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
-                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
-                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
-                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
-                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
-                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
-                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
-                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
-                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
-                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
-                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
-                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
-                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
-                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
-                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
-                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
-                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
-                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
-                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
-                Functions.random(type = CHARGED),
-                Functions.random(type = CHARGED),
-                Functions.random(type = CHARGED),
-                Functions.random(type = CHARGED)
-        )
+        particleSystem.particles = Functions.nGluonicParticlePairs(80)
         particleSystem.barriers = arrayOf(
         )
         particleSystem.fields = arrayOf(
@@ -59,10 +34,7 @@ object Main {
         while (true) {
 
             //Draw Frame
-            if (!SHOW_TRAILS){
-                g.color = Color.BLACK
-                g.fillRect(0, 0, Constants.WIDTH, Constants.HEIGHT)
-            }
+                Thread.sleep(1)
             particleSystem.draw(g, false)
 
             //Compute Next Frame
