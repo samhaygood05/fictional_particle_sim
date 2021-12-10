@@ -1,38 +1,54 @@
 package com.fictional_particle_sim
 
 import com.fictional_particle_sim.geometrics.Point
-import com.fictional_particle_sim.geometrics.Vector
 import com.fictional_particle_sim.physicals.Shape.*
 import com.fictional_particle_sim.physicals.Field
+import com.fictional_particle_sim.physicals.Type.*
 import com.fictional_particle_sim.util.Functions
 import com.fictional_particle_sim.physicals.attractiveField
 import com.fictional_particle_sim.util.Constants
-import com.fictional_particle_sim.util.Constants.Companion.SHOW_FPS
+import com.fictional_particle_sim.util.Constants.Companion.SCALED_CENTER
+import com.fictional_particle_sim.util.Constants.Companion.SHOW_TRAILS
 import com.fictional_particle_sim.util.Constants.Companion.particleSystem
 import com.fictional_particle_sim.util.VectorSpace
-import com.fictional_particle_sim.util.vectorField
 import java.awt.Color
 import java.awt.Graphics
-import kotlin.math.roundToInt
 
 object Main {
-    private val f: vectorField = attractiveField(Constants.SCALED_CENTER, 0.1)
     @JvmStatic
     fun main(args: Array<String>) {
 
         // Initializes Particle System
-        Constants.particleSystem.particles = arrayOf(
-                Functions.random(charge = 5.0),
-                Functions.random(charge = 5.0),
-                Functions.random(charge = 5.0),
-                Functions.random(charge = -5.0),
-                Functions.random(charge = -5.0),
-                Functions.random(charge = -5.0)
+        particleSystem.particles = arrayOf(
+                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
+                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
+                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
+                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
+                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
+                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
+                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
+                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
+                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
+                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
+                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
+                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
+                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
+                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
+                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
+                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
+                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
+                Functions.random(charge = 10.0, type = UNIVERSAL_ATTRACTOR),
+                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
+                Functions.random(charge = 10.0, type = UNIVERSAL_REPELLER),
+                Functions.random(type = CHARGED),
+                Functions.random(type = CHARGED),
+                Functions.random(type = CHARGED),
+                Functions.random(type = CHARGED)
         )
-        Constants.particleSystem.barriers = arrayOf(
+        particleSystem.barriers = arrayOf(
         )
-        Constants.particleSystem.fields = arrayOf(
-                Field(topLeft = Point(), bottomRight = Point(Constants.SCALE_WIDTH, Constants.SCALE_HEIGHT), color = Color(0,0,0,0), fieldForce = {Vector()}, velocityScalar = { 0.9 }, shape = RECTANGLE)
+        particleSystem.fields = arrayOf(
+                Field(topLeft = Point(), bottomRight = Point(Constants.SCALE_WIDTH, Constants.SCALE_HEIGHT), color = Color(0,0,0,0), fieldForce = attractiveField(SCALED_CENTER, 0.0), velocityScalar = { 1.0 }, shape = RECTANGLE)
         )
         val fr = VectorSpace(Constants.WIDTH, Constants.HEIGHT)
     }
@@ -43,15 +59,11 @@ object Main {
         while (true) {
 
             //Draw Frame
-            g.color = Color.BLACK
-            g.fillRect(0, 0, Constants.WIDTH, Constants.HEIGHT)
-            particleSystem.draw(g, false)
-            Thread.sleep((1000 / Constants.FPS).toLong())
-            if (SHOW_FPS) {
-                val elapsedTime: Double = System.currentTimeMillis() / 1000.0 - Constants.begin
-                if (particleSystem.frame / elapsedTime <= 20) g.color = Color.RED else g.color = Color.WHITE
-                g.drawString("FPS: ${(particleSystem.frame / elapsedTime).roundToInt()}", 5, 10)
+            if (!SHOW_TRAILS){
+                g.color = Color.BLACK
+                g.fillRect(0, 0, Constants.WIDTH, Constants.HEIGHT)
             }
+            particleSystem.draw(g, false)
 
             //Compute Next Frame
             if (Constants.DEBUG) println(particleSystem)

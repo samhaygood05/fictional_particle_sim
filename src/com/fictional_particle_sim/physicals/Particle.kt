@@ -4,35 +4,68 @@ import com.fictional_particle_sim.util.Constants
 import com.fictional_particle_sim.geometrics.Point
 import com.fictional_particle_sim.geometrics.Vector
 import com.fictional_particle_sim.physicals.Shape.*
+import com.fictional_particle_sim.physicals.Type.*
+import com.fictional_particle_sim.util.Constants.Companion.MAX_ATTRACTOR_CHARGE
 import com.fictional_particle_sim.util.Constants.Companion.MAX_CHARGE
 import java.awt.Color
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.round
+import kotlin.math.sign
 
 class Particle(var pos: Point, var lastPos: Point = pos,
                var vel: Vector = Vector(),
-               var mass: Double = 1.0, var charge: Double = 0.0, var maxCharge: Double = 0.0,
-               var fixedCharge: Boolean = false, var fixedMaxCharge: Boolean = false, var fixedVel: Boolean = false,
-               var chargeColor: Color = Color.GRAY, var maxChargeColor: Color = chargeColor) {
+               var mass: Double = 1.0, var charge: Double = 0.0, var targetCharge: Double = 0.0,
+               var fixedCharge: Boolean = false, var fixedMaxCharge: Boolean = false, var fixedVel: Boolean = false, var type: Type = CHARGED,
+               var chargeColor: Color = Color.GRAY, var targetChargeColor: Color = chargeColor) {
 
 
     fun force(b: Particle): Vector {
         val dist = pos.dist(b.pos)
+        val tempCharge = when (type){
+            UNIVERSAL_ATTRACTOR -> when (b.type) {
+                UNIVERSAL_ATTRACTOR -> -abs(charge)
+                CHARGED, UNIVERSAL_REPELLER -> abs(charge)
+            }
+            UNIVERSAL_REPELLER -> when (b.type) {
+                UNIVERSAL_ATTRACTOR -> abs(charge)
+                CHARGED, UNIVERSAL_REPELLER -> -abs(charge)
+            }
+            CHARGED -> when (b.type) {
+                UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> 1.0
+                CHARGED -> charge
+            }
+        }
+        val tempChargeB = when (b.type) {
+            UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> abs(b.charge)
+            CHARGED -> when (type) {
+                UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> 1.0
+                CHARGED -> b.charge
+            }
+        }
         return if (dist != 0.0) {
             val direct: Vector = Vector(pos, b.pos).norm()
-            val distCube = Constants.TWO_PI_SQUARED * Math.pow(dist, 3.0)
-            if (dist > 2 * Constants.MIN_DIST) {
-                val forceM = charge * b.charge / distCube
-                direct * forceM
-            } else if (dist > Constants.MIN_DIST) {
-                val forceM: Double = (charge * b.charge / 2 - Constants.PUSHBACK_FORCE * (vel.proj(direct) - b.vel.proj(direct)).magnitude()) / distCube
-                direct * forceM
-            } else if (dist == Constants.MIN_DIST) {
-                Vector()
-            } else {
-                val forceM: Double = Constants.PUSHBACK_FORCE * (vel.proj(direct) - b.vel.proj(direct)).magnitude() / distCube
-                direct * forceM
+            val distCube = Constants.TWO_PI_SQUARED * dist.pow(3.0)
+            when {
+                dist > 2 * Constants.MIN_DIST -> {
+                    val forceM = tempCharge * tempChargeB / distCube
+                    direct * forceM
+                }
+                dist > Constants.MIN_DIST -> {
+                    val forceM: Double = (tempCharge * tempChargeB / 2 - Constants.PUSHBACK_FORCE * (vel.proj(direct) - b.vel.proj(direct)).magnitude()) / distCube
+                    direct * forceM
+                }
+                dist == Constants.MIN_DIST -> {
+                    val forceM = tempCharge * tempChargeB / distCube
+                    if (forceM > 0) Vector() else direct * forceM
+                }
+                else -> {
+                    var forceM = tempCharge * tempChargeB / distCube
+                    if (forceM >= 0) {
+                        forceM = Constants.PUSHBACK_FORCE * (vel.proj(direct) - b.vel.proj(direct)).magnitude() / distCube
+                    }
+                    direct * forceM
+                }
             }
         } else Vector()
     }
@@ -48,19 +81,27 @@ class Particle(var pos: Point, var lastPos: Point = pos,
         pos += (vel.center() * (Constants.SPF)).end
     }
     fun maxCharge(b: Particle): Double {
-        return if (this != b) {
+        val tempMaxCharge = when (type) {
+            UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> MAX_ATTRACTOR_CHARGE
+            CHARGED -> MAX_CHARGE
+        }
+        return if (this != b && (b.type != UNIVERSAL_ATTRACTOR || b.type != UNIVERSAL_ATTRACTOR)) {
             val dist = pos.dist(b.pos)
             if (dist != 0.0) {
                 Constants.CHARGE_FORCE * b.charge / (Constants.TWO_PI_SQUARED * dist.pow(3.0))
-            } else b.charge / abs(b.charge)
+            } else sign(b.charge) * tempMaxCharge
         } else 0.0
     }
     fun charge(b: Particle): Double {
-        return if (this != b) {
+        val tempMaxCharge = when (type) {
+            UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> MAX_ATTRACTOR_CHARGE
+            CHARGED -> MAX_CHARGE
+        }
+        return if (this != b && (b.type != UNIVERSAL_ATTRACTOR || b.type != UNIVERSAL_ATTRACTOR)) {
             val dist = pos.dist(b.pos)
             if (dist != 0.0) {
                 Constants.DELTA_CHARGE_FORCE * b.charge / (2 * Constants.TWO_PI_SQUARED * dist.pow(2.0))
-            } else b.charge / abs(b.charge)
+            } else sign(b.charge) * tempMaxCharge
         } else 0.0
     }
     fun collide(b: Barrier) {
@@ -133,33 +174,53 @@ class Particle(var pos: Point, var lastPos: Point = pos,
     }
 
     fun chargeColor() {
+        val gray = Color(128, 128, 128)
+        val red = when (type) {
+            CHARGED -> Color(36, 162, 26)
+            UNIVERSAL_ATTRACTOR -> Color(252, 211, 3)
+            UNIVERSAL_REPELLER -> Color(3, 44, 252)
+        }
+        val green = when (type) {
+            CHARGED -> Color(229, 43, 43)
+            UNIVERSAL_ATTRACTOR -> Color(252, 211, 3)
+            UNIVERSAL_REPELLER -> Color(3, 44, 252)
+        }
+        val tempMaxCharge = when (type) {
+            UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> MAX_ATTRACTOR_CHARGE
+            CHARGED -> MAX_CHARGE
+        }
+
         chargeColor = when {
-            charge == 0.0 -> Color(128, 128, 128)
-            charge >= MAX_CHARGE -> Color(36, 162, 26)
-            charge <= -MAX_CHARGE -> Color(229, 43, 43)
-            charge > 0 -> Color((36 * charge/MAX_CHARGE + 128 * (1 - charge/MAX_CHARGE)).toInt(), (162 * charge/MAX_CHARGE + 128 * (1 - charge/MAX_CHARGE)).toInt(), (26 * charge/MAX_CHARGE + 128 * (1 - charge/MAX_CHARGE)).toInt())
-            else -> Color((229 * -charge/MAX_CHARGE + 128 * (1 + charge/MAX_CHARGE)).toInt(), (43 * -charge/MAX_CHARGE + 128 * (1 + charge/MAX_CHARGE)).toInt(), (43 * -charge/MAX_CHARGE + 128 * (1 + charge/MAX_CHARGE)).toInt())
+            charge == 0.0 -> gray
+            charge >= tempMaxCharge -> red
+            charge <= -tempMaxCharge -> green
+            charge > 0 -> Color((red.red * charge/tempMaxCharge + gray.red * (1 - charge/tempMaxCharge)).toInt(), (red.green * charge/tempMaxCharge + gray.green * (1 - charge/tempMaxCharge)).toInt(), (red.blue * charge/tempMaxCharge + gray.blue * (1 - charge/tempMaxCharge)).toInt())
+            else -> Color((green.red * -charge/tempMaxCharge + gray.red * (1 + charge/tempMaxCharge)).toInt(), (green.green * -charge/tempMaxCharge + gray.green * (1 + charge/tempMaxCharge)).toInt(), (green.blue * -charge/tempMaxCharge + gray.blue * (1 + charge/tempMaxCharge)).toInt())
         }
         if (mass < 0) {
             chargeColor = Color(255 - chargeColor.red, 255 - chargeColor.green, 255 - chargeColor.blue)
         }
 
-        if (abs(maxCharge) > abs(charge)) {
-            maxChargeColor = when {
-                maxCharge == 0.0 -> Color(128, 128, 128)
-                maxCharge >= 1 -> Color(36, 162, 26)
-                maxCharge <= -1 -> Color(229, 43, 43)
-                maxCharge > 0 -> Color((36 * maxCharge + 128 * (1 - maxCharge)).toInt(), (162 * maxCharge + 128 * (1 - maxCharge)).toInt(), (26 * maxCharge + 128 * (1 - maxCharge)).toInt())
-                else -> Color((229 * -maxCharge + 128 * (1 + maxCharge)).toInt(), (43 * -maxCharge + 128 * (1 + maxCharge)).toInt(), (43 * -maxCharge + 128 * (1 + maxCharge)).toInt())
+        if (abs(targetCharge) > abs(charge)) {
+            targetChargeColor = when {
+                targetCharge == 0.0 -> gray
+                targetCharge >= tempMaxCharge -> red
+                targetCharge <= -tempMaxCharge -> green
+                targetCharge > 0 -> Color((red.red * targetCharge/tempMaxCharge + gray.red * (1 - targetCharge/tempMaxCharge)).toInt(), (red.green * targetCharge/tempMaxCharge + gray.green * (1 - targetCharge/tempMaxCharge)).toInt(), (red.blue * targetCharge/tempMaxCharge + gray.blue * (1 - targetCharge/tempMaxCharge)).toInt())
+                else -> Color((green.red * -targetCharge/tempMaxCharge + gray.red * (1 + targetCharge/tempMaxCharge)).toInt(), (green.green * -targetCharge/tempMaxCharge + gray.green * (1 + targetCharge/tempMaxCharge)).toInt(), (green.blue * -targetCharge/tempMaxCharge + gray.blue * (1 + targetCharge/tempMaxCharge)).toInt())
             }
             if (mass < 0) {
-                maxChargeColor = Color(255 - maxChargeColor.red, 255 - maxChargeColor.green, 255 - maxChargeColor.blue)
+                targetChargeColor = Color(255 - targetChargeColor.red, 255 - targetChargeColor.green, 255 - targetChargeColor.blue)
             }
-        } else maxChargeColor = chargeColor
+        } else targetChargeColor = chargeColor
     }
 
     override fun toString(): String {
-        return "position: $pos, velocity: ${vel.toString(true)}, Mass:$mass, Charge: ${round(charge * 10000)/10000}, Max Charge: ${round(maxCharge * 10000)/10000}"
+        return "position: $pos, velocity: ${vel.toString(true)}, Mass:$mass, Charge: ${round(charge * 10000)/10000}, Max Charge: ${round(targetCharge * 10000)/10000}"
     }
+}
+
+enum class Type {
+    CHARGED, UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER
 }
 

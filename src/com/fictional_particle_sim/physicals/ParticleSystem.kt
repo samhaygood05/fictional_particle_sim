@@ -7,20 +7,25 @@ import com.fictional_particle_sim.geometrics.Point
 import com.fictional_particle_sim.geometrics.Vector
 import com.fictional_particle_sim.util.Constants.Companion.GRAPHICS
 import com.fictional_particle_sim.util.Constants.Companion.MAX_CHARGE
-import com.fictional_particle_sim.util.Constants.Companion.SHOW_BARRIERS
-import com.fictional_particle_sim.util.Constants.Companion.SHOW_FIELDS
-import com.fictional_particle_sim.util.Constants.Companion.SHOW_PARTICLES
+import com.fictional_particle_sim.util.Constants.Companion.BARRIER_DEBUG
+import com.fictional_particle_sim.util.Constants.Companion.FIELD_DEBUG
+import com.fictional_particle_sim.util.Constants.Companion.HEIGHT
+import com.fictional_particle_sim.util.Constants.Companion.PARTICLE_DEBUG
 import com.fictional_particle_sim.util.Constants.Companion.SPF
+import com.fictional_particle_sim.util.Constants.Companion.WIDTH
 import com.fictional_particle_sim.util.TheCanvas
 import java.awt.Color
 import java.awt.Graphics
-import kotlin.math.abs
-import kotlin.math.sign
+import kotlin.math.*
 
 class ParticleSystem(var particles: Array<Particle> = arrayOf(), var barriers: Array<Barrier> = arrayOf(), var fields: Array<Field> = arrayOf(), var frame: Long = 0) {
     fun simulate() {
         frame++
         for (particle in particles) {
+            val tempMaxCharge = when (particle.type) {
+                Type.UNIVERSAL_ATTRACTOR, Type.UNIVERSAL_REPELLER -> Constants.MAX_ATTRACTOR_CHARGE
+                Type.CHARGED -> MAX_CHARGE
+            }
             var force = Vector()
             var maxCharge = 0.0
             var charge = 0.0
@@ -59,9 +64,9 @@ class ParticleSystem(var particles: Array<Particle> = arrayOf(), var barriers: A
             particle.applyVel(false)
 
             if (!particle.fixedCharge) {
-                if (abs(charge) > MAX_CHARGE) charge = MAX_CHARGE * sign(charge)
-                if (abs(maxCharge) > MAX_CHARGE) maxCharge = MAX_CHARGE * sign(maxCharge)
-                particle.maxCharge = maxCharge
+                if (abs(charge) > tempMaxCharge) charge = tempMaxCharge * sign(charge)
+                if (abs(maxCharge) > tempMaxCharge) maxCharge = tempMaxCharge * sign(maxCharge)
+                particle.targetCharge = maxCharge
                 if (abs(charge + particle.charge) < abs(maxCharge) && sign(charge + particle.charge) == sign(charge) || sign(charge + particle.charge) != sign(charge)) particle.charge = charge + particle.charge
             }
             particle.chargeColor()
@@ -119,29 +124,34 @@ class ParticleSystem(var particles: Array<Particle> = arrayOf(), var barriers: A
 
             }
             for (particle in particles) {
-                TheCanvas.drawPoint(g, particle.pos * (Constants.PPU.toDouble()), (Constants.MIN_DIST * Constants.PPU / 8).toInt(), particle.maxChargeColor)
+                TheCanvas.drawPoint(g, particle.pos * (Constants.PPU.toDouble()), (Constants.MIN_DIST * abs(particle.mass).pow(1/4.0) * Constants.PPU / 8).toInt(), particle.targetChargeColor)
                 if (showVel) {
                     TheCanvas.drawVector(g, particle.vel.scaleFromOrigin(100.0 / Constants.PPU).center(particle.pos * (Constants.PPU.toDouble())), true, .1, .05, particle.chargeColor)
                 }
             }
         }
+        if (Constants.SHOW_FPS) {
+            val elapsedTime: Double = System.currentTimeMillis() / 1000.0 - Constants.begin
+            if (frame / elapsedTime <= 20) g.color = Color.RED else g.color = Color.WHITE
+            g.drawString("FPS: ${(frame / elapsedTime).roundToInt()}", 5, 10)
+        }
     }
 
     override fun toString(): String {
         var temp = ""
-        if (SHOW_PARTICLES) {
+        if (PARTICLE_DEBUG) {
             temp += "Particles:\n"
             for (particle in particles.indices) {
                 temp += "$particle: ${particles[particle]}\n"
             }
         }
-        if (SHOW_BARRIERS) {
+        if (BARRIER_DEBUG) {
             temp += "\nBarriers:\n"
             for (barrier in barriers.indices) {
                 temp += "$barrier: ${barriers[barrier]}\n"
             }
         }
-        if (SHOW_FIELDS) {
+        if (FIELD_DEBUG) {
             temp += "\nFields:\n"
             for (field in fields.indices) {
                 temp += "$field: ${fields[field]}\n"

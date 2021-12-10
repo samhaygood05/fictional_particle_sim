@@ -23,9 +23,7 @@ class Constants {
         val CENTER = Point((WIDTH / 2).toDouble(), (HEIGHT / 2).toDouble())
 
         // Simulation Constants
-        const val FPS = 1000
         const val SPF = 0.00001
-        const val MAX_DISTANCE = 20000.0
         const val PPU = 200
         const val SCALE_WIDTH = WIDTH.toDouble() / PPU
         const val SCALE_HEIGHT = HEIGHT.toDouble() / PPU
@@ -45,16 +43,18 @@ class Constants {
         const val PUSHBACK_FORCE = -0.01
         const val MAX_VEL = 100.0
         const val MAX_CHARGE = 5.0
+        const val MAX_ATTRACTOR_CHARGE = 10.0
 
         // Graphics Constants
         @JvmField
         val GRAPHICS = FAST
+        const val SHOW_TRAILS = false
 
         // Debug Constants
         const val DEBUG = false
-        const val SHOW_PARTICLES = true
-        const val SHOW_BARRIERS = false
-        const val SHOW_FIELDS = false
+        const val PARTICLE_DEBUG = true
+        const val BARRIER_DEBUG = false
+        const val FIELD_DEBUG = false
         const val SHOW_FPS = true
 
         @JvmField

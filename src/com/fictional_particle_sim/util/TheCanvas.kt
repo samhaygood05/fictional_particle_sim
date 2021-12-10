@@ -15,8 +15,6 @@ import kotlin.math.roundToInt
 
 class TheCanvas : Canvas() {
 
-    var frame: Int = 0
-
     override fun paint(g: Graphics) {
         Main.computeAndDraw(g)
     }

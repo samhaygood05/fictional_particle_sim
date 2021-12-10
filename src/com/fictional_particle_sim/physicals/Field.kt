@@ -38,7 +38,9 @@ class Field(var topLeft: Point = Point(), var bottomRight: Point = Point(), var 
     }
 }
 
-fun attractiveField(center: Point, strength: Double): vectorField = { Vector(this, center).norm() * (Vector(this, center).magnitude() * strength).pow(2)}
+fun attractiveField(center: Point, strength: Double): vectorField = {
+    Vector(this, center).norm() * strength * (Vector(this, center).magnitude()).pow(2)
+}
 
 fun vectorFieldToString(fieldForce: vectorField): String {
     return "Pos -> Vel"
