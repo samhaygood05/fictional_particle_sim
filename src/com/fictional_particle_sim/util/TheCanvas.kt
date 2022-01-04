@@ -8,12 +8,15 @@ import com.fictional_particle_sim.physicals.Field
 import com.fictional_particle_sim.physicals.Shape
 import com.fictional_particle_sim.util.Constants.Companion.GRAPHICS
 import com.fictional_particle_sim.util.Graphics.*
-import java.awt.Canvas
-import java.awt.Color
+import java.awt.*
 import java.awt.Graphics
 import kotlin.math.roundToInt
 
-class TheCanvas : Canvas() {
+class TheCanvas(background: Color) : Canvas() {
+
+    init {
+        this.background = background
+    }
 
     override fun paint(g: Graphics) {
         Main.computeAndDraw(g)

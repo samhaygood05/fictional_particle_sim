@@ -115,10 +115,10 @@ class ParticleSystem(var particles: Array<Particle> = arrayOf(), var barriers: A
         if (!SHOW_TRAILS) {
             g.color = Color.BLACK
             g.fillRect(0, 0, WIDTH, HEIGHT)
-        }
-        if (SHOW_FPS){
-            g.color = Color.BLACK
-            g.fillRect(0, 0, 55, 15)
+            if (SHOW_FPS){
+                g.color = Color.BLACK
+                g.fillRect(0, 0, 55, 15)
+            }
         }
         if (fields.isNotEmpty()) {
             TheCanvas.drawFields(g, fields)

@@ -2,10 +2,12 @@ package com.fictional_particle_sim.util
 
 import javax.swing.JFrame
 import java.awt.BorderLayout
+import java.awt.Color
+import java.awt.Rectangle
 
 class VectorSpace : JFrame {
 
-    private val canvas = TheCanvas()
+    private val canvas = TheCanvas(Color.BLACK)
 
     constructor() {
         layout = BorderLayout()

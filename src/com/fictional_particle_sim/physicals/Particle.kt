@@ -24,12 +24,12 @@ class Particle(var pos: Point, var lastPos: Point = pos,
         val dist = pos.dist(b.pos)
         val tempCharge = when (type){
             UNIVERSAL_ATTRACTOR -> when (b.type) {
-                UNIVERSAL_ATTRACTOR -> -10.0
-                CHARGED, UNIVERSAL_REPELLER -> 10.0
+                UNIVERSAL_ATTRACTOR -> -MAX_ATTRACTOR_CHARGE
+                CHARGED, UNIVERSAL_REPELLER -> MAX_ATTRACTOR_CHARGE
             }
             UNIVERSAL_REPELLER -> when (b.type) {
-                UNIVERSAL_ATTRACTOR -> 10.0
-                CHARGED, UNIVERSAL_REPELLER -> -10.0
+                UNIVERSAL_ATTRACTOR -> MAX_ATTRACTOR_CHARGE
+                CHARGED, UNIVERSAL_REPELLER -> -MAX_ATTRACTOR_CHARGE
             }
             CHARGED -> when (b.type) {
                 UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> 1.0
@@ -37,7 +37,7 @@ class Particle(var pos: Point, var lastPos: Point = pos,
             }
         }
         val tempChargeB = when (b.type) {
-            UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> 10.0
+            UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> MAX_ATTRACTOR_CHARGE
             CHARGED -> when (type) {
                 UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> 1.0
                 CHARGED -> b.charge
