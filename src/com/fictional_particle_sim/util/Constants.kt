@@ -43,7 +43,7 @@ class Constants {
         const val PUSHBACK_FORCE = -0.01
         const val MAX_VEL = 100.0
         const val MAX_CHARGE = 5.0
-        const val MAX_ATTRACTOR_CHARGE = 10.0
+        const val ATTRACTOR_CHARGE = 10.0
 
         // Graphics Constants
         @JvmField
