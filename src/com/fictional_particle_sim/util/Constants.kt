@@ -23,8 +23,8 @@ class Constants {
         val CENTER = Point((WIDTH / 2).toDouble(), (HEIGHT / 2).toDouble())
 
         // Simulation Constants
-        const val SPF = 0.0001
-        const val PPU = 50
+        const val SPF = 0.00001
+        const val PPU = 200
         const val SCALE_WIDTH = WIDTH.toDouble() / PPU
         const val SCALE_HEIGHT = HEIGHT.toDouble() / PPU
         @JvmField

@@ -26,7 +26,7 @@ class ParticleSystem(var particles: Array<Particle> = arrayOf(), var barriers: A
         frame++
         for (particle in particles) {
             val tempMaxCharge = when (particle.type) {
-                Type.UNIVERSAL_ATTRACTOR, Type.UNIVERSAL_REPELLER -> Constants.MAX_ATTRACTOR_CHARGE
+                Type.UNIVERSAL_ATTRACTOR, Type.UNIVERSAL_REPELLER -> Constants.ATTRACTOR_CHARGE
                 Type.CHARGED -> MAX_CHARGE
             }
             var force = Vector()

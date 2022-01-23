@@ -7,13 +7,12 @@ import com.fictional_particle_sim.physicals.Type
 import com.fictional_particle_sim.physicals.Type.*
 import com.fictional_particle_sim.util.Constants.Companion.MAX_CHARGE
 import kotlin.math.floor
-import kotlin.math.roundToInt
 
 object Functions {
 
     fun random(vel: Vector = Vector(), mass: Double = 1.0, fixedCharge: Boolean = false, fixedMaxCharge: Boolean = false, fixedVel: Boolean = false, type: Type = CHARGED): Particle {
         val tempMaxCharge = when (type) {
-            UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> Constants.MAX_ATTRACTOR_CHARGE
+            UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> Constants.ATTRACTOR_CHARGE
             CHARGED -> MAX_CHARGE
         }
         return Particle(pos = Point(Math.random() * Constants.SCALE_WIDTH, Math.random() * Constants.SCALE_HEIGHT), vel = vel, mass = mass, charge = (Math.random() * 2 - 1) * tempMaxCharge, fixedCharge = fixedCharge, fixedMaxCharge = fixedMaxCharge, fixedVel = fixedVel, type = type)
@@ -30,7 +29,7 @@ object Functions {
             }
         }
         val tempMaxCharge = when (type) {
-            UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> Constants.MAX_ATTRACTOR_CHARGE
+            UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> Constants.ATTRACTOR_CHARGE
             CHARGED -> MAX_CHARGE
         }
         return Particle(pos = Point(Math.random() * Constants.SCALE_WIDTH, Math.random() * Constants.SCALE_HEIGHT), vel = vel, mass = mass, charge = (Math.random() * 2 - 1) * tempMaxCharge, fixedCharge = fixedCharge, fixedMaxCharge = fixedMaxCharge, fixedVel = fixedVel, type = type)

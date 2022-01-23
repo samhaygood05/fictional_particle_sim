@@ -5,7 +5,7 @@ import com.fictional_particle_sim.geometrics.Point
 import com.fictional_particle_sim.geometrics.Vector
 import com.fictional_particle_sim.physicals.Shape.*
 import com.fictional_particle_sim.physicals.Type.*
-import com.fictional_particle_sim.util.Constants.Companion.MAX_ATTRACTOR_CHARGE
+import com.fictional_particle_sim.util.Constants.Companion.ATTRACTOR_CHARGE
 import com.fictional_particle_sim.util.Constants.Companion.MAX_CHARGE
 import java.awt.Color
 import kotlin.math.abs
@@ -182,7 +182,7 @@ class Particle(var pos: Point, var lastPos: Point = pos,
             UNIVERSAL_REPELLER -> Color(3, 44, 252)
         }
         val tempMaxCharge = when (type) {
-            UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> MAX_ATTRACTOR_CHARGE
+            UNIVERSAL_ATTRACTOR, UNIVERSAL_REPELLER -> ATTRACTOR_CHARGE
             CHARGED -> MAX_CHARGE
         }
 
